@@ -10,12 +10,12 @@
     <string name="n7">7</string>
     <string name="n8">8</string>
     <string name="n9">9</string>
-    <string name="dat">.</string>
+    <string name="dot">.</string>
     <string name="eq">=</string>
-    <string name="pl">+</string>
-    <string name="mi">-</string>
-    <string name="as">*</string>
-    <string name="sl">/</string>
+    <string name="add">+</string>
+    <string name="sub">-</string>
+    <string name="multi">*</string>
+    <string name="div">/</string>
     <string name="bs">BS</string>
     <string name="c">C</string>
     <string name="ac">AC</string>

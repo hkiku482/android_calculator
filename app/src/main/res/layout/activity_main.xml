@@ -37,7 +37,7 @@
         android:text="@string/n0"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/keypadDat"
+        app:layout_constraintEnd_toStartOf="@+id/keypadDot"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/keypad1" />
@@ -60,7 +60,7 @@
         android:layout_height="90dp"
         android:text="@string/n2"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/keypadDat"
+        app:layout_constraintBottom_toTopOf="@+id/keypadDot"
         app:layout_constraintEnd_toStartOf="@+id/keypad3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypad1"
@@ -73,7 +73,7 @@
         android:text="@string/n3"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/keypadEq"
-        app:layout_constraintEnd_toStartOf="@+id/keypadMi"
+        app:layout_constraintEnd_toStartOf="@+id/keypadSub"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypad2"
         app:layout_constraintTop_toBottomOf="@+id/keypad6" />
@@ -109,7 +109,7 @@
         android:text="@string/n6"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/keypad3"
-        app:layout_constraintEnd_toStartOf="@+id/keypadAs"
+        app:layout_constraintEnd_toStartOf="@+id/keypadMulti"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypad5"
         app:layout_constraintTop_toBottomOf="@+id/keypad9" />
@@ -145,7 +145,7 @@
         android:text="@string/n9"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/keypad6"
-        app:layout_constraintEnd_toStartOf="@+id/keypadSl"
+        app:layout_constraintEnd_toStartOf="@+id/keypadDiv"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypad8"
         app:layout_constraintTop_toBottomOf="@+id/keypadAC" />
@@ -157,16 +157,16 @@
         android:text="@string/eq"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/keypadPl"
+        app:layout_constraintEnd_toStartOf="@+id/keypadAdd"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/keypadDat"
+        app:layout_constraintStart_toEndOf="@+id/keypadDot"
         app:layout_constraintTop_toBottomOf="@+id/keypad3" />
 
     <Button
-        android:id="@+id/keypadDat"
+        android:id="@+id/keypadDot"
         android:layout_width="85dp"
         android:layout_height="90dp"
-        android:text="@string/dat"
+        android:text="@string/dot"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/keypadEq"
@@ -175,48 +175,48 @@
         app:layout_constraintTop_toBottomOf="@+id/keypad2" />
 
     <Button
-        android:id="@+id/keypadPl"
+        android:id="@+id/keypadAdd"
         android:layout_width="85dp"
         android:layout_height="90dp"
-        android:text="@string/pl"
+        android:text="@string/add"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypadEq"
-        app:layout_constraintTop_toBottomOf="@+id/keypadMi" />
+        app:layout_constraintTop_toBottomOf="@+id/keypadSub" />
 
     <Button
-        android:id="@+id/keypadMi"
+        android:id="@+id/keypadSub"
         android:layout_width="85dp"
         android:layout_height="90dp"
-        android:text="@string/mi"
+        android:text="@string/sub"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/keypadPl"
+        app:layout_constraintBottom_toTopOf="@+id/keypadAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypad3"
-        app:layout_constraintTop_toBottomOf="@+id/keypadAs" />
+        app:layout_constraintTop_toBottomOf="@+id/keypadMulti" />
 
     <Button
-        android:id="@+id/keypadAs"
+        android:id="@+id/keypadMulti"
         android:layout_width="85dp"
         android:layout_height="90dp"
-        android:text="@string/as"
+        android:text="@string/multi"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/keypadMi"
+        app:layout_constraintBottom_toTopOf="@+id/keypadSub"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypad6"
-        app:layout_constraintTop_toBottomOf="@+id/keypadSl" />
+        app:layout_constraintTop_toBottomOf="@+id/keypadDiv" />
 
     <Button
-        android:id="@+id/keypadSl"
+        android:id="@+id/keypadDiv"
         android:layout_width="85dp"
         android:layout_height="90dp"
-        android:text="@string/sl"
+        android:text="@string/div"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/keypadAs"
+        app:layout_constraintBottom_toTopOf="@+id/keypadMulti"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypad9"
@@ -227,7 +227,7 @@
         android:layout_width="85dp"
         android:layout_height="50dp"
         android:text="@string/bs"
-        app:layout_constraintBottom_toTopOf="@+id/keypadSl"
+        app:layout_constraintBottom_toTopOf="@+id/keypadDiv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/keypadAC"
