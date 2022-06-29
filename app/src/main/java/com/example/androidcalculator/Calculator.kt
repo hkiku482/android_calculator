@@ -20,14 +20,6 @@ class Calculator {
         return currentInput
     }
 
-    fun getNumbers(): MutableList<Float> {
-        return numbers
-    }
-
-    fun getSymbols(): MutableList<Char> {
-        return symbols
-    }
-
     fun putRune(c: Char) {
         if (c.code in 48..57) {
 //          (c: Char) is 0-9
@@ -71,11 +63,34 @@ class Calculator {
     }
 
     fun calculate(): Float? {
-        var r: Float? = 0F
-
         makeData()
+        for (i in 0 until numbers.size - 1) {
+            val n1 = numbers.removeFirst()
+            val n2 = numbers.removeFirst()
+            val symbol = symbols.removeFirst()
 
-        return r
+            val tmp: Float?
+            when (symbol) {
+                '+' -> {
+                    tmp = calcAdd(n1, n2)
+                }
+                '-' -> {
+                    tmp = calcSub(n1, n2)
+                }
+                '*' -> {
+                    tmp = calcMulti(n1, n2)
+                }
+                '/' -> {
+                    tmp = calcDiv(n1, n2)
+                    if (tmp == null) return null
+                }
+                else -> {
+                    return null
+                }
+            }
+            numbers.add(0, tmp)
+        }
+        return numbers[0]
     }
 
     private fun makeData() {
