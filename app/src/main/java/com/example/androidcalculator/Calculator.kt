@@ -2,12 +2,19 @@ package com.example.androidcalculator
 
 class Calculator {
     enum class State{
-        READY, NUM, SYM
+        NUM, SYM
     }
 
-    private var currentInput: String = ""
+    enum class Symbols {
+        ADD, SUB, MULTI, DIV
+    }
+
+    private var currentInput: String = "0"
     private var formula: String = ""
-    private var state: State = State.READY
+    private var state: State = State.SYM
+
+    private var numbersInputOrder: MutableList<Float> = mutableListOf()
+    private var symbolsInputOrder: MutableList<Symbols> = mutableListOf()
 
     private var numbers: MutableList<Float> = mutableListOf()
     private var symbols: MutableList<Char> = mutableListOf()
@@ -18,6 +25,67 @@ class Calculator {
 
     fun getCurrentInput(): String {
         return currentInput
+    }
+
+    fun putSymbol(s: Symbols) {
+        if (numbersInputOrder.isEmpty()) {
+            numbersInputOrder.add(0F)
+        }
+        when(state) {
+            State.SYM -> {
+                if (symbolsInputOrder.isNotEmpty()) {
+                    symbolsInputOrder.removeLast()
+                }
+            }
+            State.NUM -> {
+                numbersInputOrder.add(currentInput.toFloat())
+            }
+        }
+        when(s) {
+            Symbols.ADD -> {
+                symbolsInputOrder.add(s)
+
+            }
+            Symbols.SUB -> {
+                symbolsInputOrder.add(s)
+
+            }
+            Symbols.MULTI -> {
+                symbolsInputOrder.add(s)
+
+            }
+            Symbols.DIV -> {
+                symbolsInputOrder.add(s)
+
+            }
+        }
+        currentInput = "0"
+        state = State.SYM
+    }
+
+    fun putNumber(c: Char) {
+        if (c.code !in 48..57 || c != '.') return
+        state = State.NUM
+        if (c == '.') {
+            if (currentIsZero()) {
+                currentInput += "0."
+            } else if (currentInput.indexOf('.') == -1 ) {
+                currentInput += "."
+            }
+        } else {
+            if (currentIsZero() && c == '0') return
+            currentInput += c.toString()
+        }
+    }
+
+    fun equal(): Float? {
+        if (state == State.SYM || currentIsZero()) {
+            numbersInputOrder.add(0F)
+        } else {
+            numbersInputOrder.add(currentInput.toFloat())
+        }
+        currentInput = "0"
+        return calculate()
     }
 
     fun putRune(c: Char) {
@@ -40,6 +108,8 @@ class Calculator {
         } else if (c == '=') {
             if (state == State.SYM) {
                 currentInput = "0"
+            } else if (currentInput == "") {
+                currentInput = "0"
             }
             formula += currentInput
             currentInput = ""
@@ -52,14 +122,31 @@ class Calculator {
                     formula += " $c "
                 }
                 State.SYM -> {
+                    if (formula == "") {
+                        formula = "0 $c "
+                    }
                     formula = formula.dropLast(2) + "$c "
-                }
-                else -> {
-                    formula = "0 $c "
                 }
             }
             currentInput = ""
         }
+    }
+
+    fun removeLastInput() {
+        if (currentInput.isNotEmpty()) {
+            currentInput = currentInput.dropLast(1)
+        }
+        if (currentInput.isEmpty() && formula.isNotEmpty()) {
+            state = State.SYM
+        }
+    }
+
+    fun allClear() {
+        currentInput = ""
+        formula = ""
+        state = State.SYM
+        numbers = mutableListOf()
+        symbols = mutableListOf()
     }
 
     fun calculate(): Float? {
@@ -91,6 +178,23 @@ class Calculator {
             numbers.add(0, tmp)
         }
         return numbers[0]
+    }
+
+    private fun convertToChar(s: Symbols): Char {
+        return when(s) {
+            Symbols.ADD -> {
+                '+'
+            }
+            Symbols.SUB -> {
+                '-'
+            }
+            Symbols.MULTI -> {
+                '*'
+            }
+            Symbols.DIV -> {
+                '/'
+            }
+        }
     }
 
     private fun makeData() {
@@ -164,5 +268,11 @@ class Calculator {
         } else {
             n1 / n2
         }
+    }
+
+    private fun currentIsZero(): Boolean {
+        if (currentInput == "") return true
+        if (currentInput.toInt() == 0) return true
+        return false
     }
 }
