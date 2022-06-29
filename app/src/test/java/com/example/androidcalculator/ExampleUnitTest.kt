@@ -37,4 +37,25 @@ class ExampleUnitTest {
         calc2.putRune('=')
         assertEquals(calc2.getFormula(), "0 + 9 - 0")
     }
+
+    @Test
+    fun calculatorMakeData() {
+        val calc1 = Calculator()
+        var numbers: MutableList<Float> = mutableListOf(3F, 2F, 6F, 2F, 7F)
+        var symbols: MutableList<Char> = mutableListOf('*', '/', '+', '+')
+        calc1.putRune('2')
+        calc1.putRune('+')
+        calc1.putRune('3')
+        calc1.putRune('*')
+        calc1.putRune('2')
+        calc1.putRune('/')
+        calc1.putRune('6')
+        calc1.putRune('+')
+        calc1.putRune('7')
+        calc1.putRune('=')
+        calc1.calculate()
+        assertEquals(calc1.getFormula(), "2 + 3 * 2 / 6 + 7")
+        assertEquals(calc1.getNumbers(), numbers)
+        assertEquals(calc1.getSymbols(), symbols)
+    }
 }

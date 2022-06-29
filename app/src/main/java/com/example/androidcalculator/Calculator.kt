@@ -9,6 +9,25 @@ class Calculator {
     private var formula: String = ""
     private var state: State = State.READY
 
+    private var numbers: MutableList<Float> = mutableListOf()
+    private var symbols: MutableList<Char> = mutableListOf()
+
+    fun getFormula(): String {
+        return formula
+    }
+
+    fun getCurrentInput(): String {
+        return currentInput
+    }
+
+    fun getNumbers(): MutableList<Float> {
+        return numbers
+    }
+
+    fun getSymbols(): MutableList<Char> {
+        return symbols
+    }
+
     fun putRune(c: Char) {
         if (c.code in 48..57) {
 //          (c: Char) is 0-9
@@ -51,12 +70,84 @@ class Calculator {
         }
     }
 
-    fun getFormula(): String {
-        return formula
+    fun calculate(): Float? {
+        var r: Float? = 0F
+
+        makeData()
+
+        return r
     }
 
-    fun getCurrentInput(): String {
-        return currentInput
+    private fun makeData() {
+        val numbersAndSymbols: List<String> = formula.split(' ').map { it.trim() }
+
+        var tmpNum = ""
+        var lastUsed = ""
+        val addSub: MutableList<String> = mutableListOf()
+        val multiDiv: MutableList<String> = mutableListOf()
+        val addSubSymbols: MutableList<String> = mutableListOf()
+        val multiDivSymbols: MutableList<String> = mutableListOf()
+
+        for (v in numbersAndSymbols) {
+            when (v) {
+                "+", "-" -> {
+                    addSubSymbols.add(v)
+                    if (lastUsed == "*" || lastUsed == "/") {
+                        multiDiv.add(tmpNum)
+                    } else {
+                        addSub.add(tmpNum)
+                    }
+                    lastUsed = v
+                }
+                "*", "/" -> {
+                    multiDiv.add(tmpNum)
+                    multiDivSymbols.add(v)
+                    lastUsed = v
+                }
+                else -> {
+//                  v is numeric
+                    tmpNum = v
+                }
+            }
+        }
+
+        if (lastUsed == "+" || lastUsed == "-") {
+            addSub.add(tmpNum)
+        } else {
+            multiDiv.add(tmpNum)
+        }
+
+        for (n in multiDiv) {
+            numbers.add(n.toFloat())
+        }
+        for (n in addSub) {
+            numbers.add(n.toFloat())
+        }
+        for (n in multiDivSymbols) {
+            symbols.add(n.toCharArray()[0])
+        }
+        for (n in addSubSymbols) {
+            symbols.add(n.toCharArray()[0])
+        }
     }
 
+    private fun calcAdd(n1: Float, n2: Float) :Float {
+        return n1 + n2
+    }
+
+    private fun calcSub(n1: Float, n2: Float) :Float {
+        return n1 - n2
+    }
+
+    private fun calcMulti(n1: Float, n2: Float) :Float {
+        return n1 * n2
+    }
+
+    private fun calcDiv(n1: Float, n2: Float) :Float? {
+        return if (n2 == 0F) {
+            null
+        } else {
+            n1 / n2
+        }
+    }
 }
