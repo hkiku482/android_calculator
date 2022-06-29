@@ -24,12 +24,17 @@ class ExampleUnitTest {
         assertEquals(calc1.getFormula(), "0.01 + ")
         calc1.putRune('*')
         assertEquals(calc1.getFormula(), "0.01 * ")
-        calc1.putRune('9')
+        calc1.putRune('2')
+        calc1.putRune('*')
+        calc1.putRune('3')
         calc1.putRune('=')
-        assertEquals(calc1.getFormula(), "0.01 * 9")
+        assertEquals(calc1.getFormula(), "0.01 * 2 * 3")
 
         val calc2 = Calculator()
         calc2.putRune('+')
-        assertEquals(calc2.getFormula(), "0 + ")
+        calc2.putRune('9')
+        calc2.putRune('-')
+        calc2.putRune('=')
+        assertEquals(calc2.getFormula(), "0 + 9 - 0")
     }
 }

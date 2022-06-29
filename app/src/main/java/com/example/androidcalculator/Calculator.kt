@@ -27,6 +27,9 @@ class Calculator {
                 currentInput += "."
             }
         } else if (c == '=') {
+            if (state == State.SYM) {
+                currentInput = "0"
+            }
             formula += currentInput
             currentInput = ""
         } else {
