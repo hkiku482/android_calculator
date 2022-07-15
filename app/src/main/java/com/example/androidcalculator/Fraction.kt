@@ -9,11 +9,47 @@ class Fraction(numerator: Int, denominator: Int) {
         this.denominator = denominator
     }
 
-    fun getAsInt(): Int {
-        return numerator / denominator
+    fun getAsFloat(): Float? {
+        if (denominator == 0) return null
+        return numerator.toFloat() / denominator.toFloat()
     }
 
-    fun reduction(): Fraction {
+    fun getAdd(add: Fraction): Fraction {
+        val f = Fraction(
+            (this.numerator * add.denominator) + (this.denominator * add.numerator),
+            this.denominator * add.denominator
+        )
+        return f.reduction()
+    }
+
+    fun getSub(sub: Fraction): Fraction {
+        val f = Fraction(
+            (this.numerator * sub.denominator) - (this.denominator * sub.numerator),
+            this.denominator * sub.denominator
+        )
+        return f.reduction()
+    }
+
+    fun getMulti(multi: Fraction): Fraction {
+        val f = Fraction(
+            this.numerator * multi.numerator,
+            this.denominator * multi.denominator
+        )
+        return f.reduction()
+    }
+
+    fun getDiv(div: Fraction): Fraction? {
+        if (div.numerator == 0) {
+            return null
+        }
+        val f = Fraction(
+            this.numerator / div.denominator,
+            this.denominator / div.numerator
+        )
+        return f.reduction()
+    }
+
+    private fun reduction(): Fraction {
         var a: Int = numerator
         var b: Int = denominator
         var r: Int
