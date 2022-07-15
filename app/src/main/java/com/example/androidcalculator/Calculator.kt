@@ -32,10 +32,8 @@ class Calculator {
         currentInput = ""
     }
 
-//    get number that user input
-//    this function can get [0-9.]
     fun putNumber(c: Char) {
-        if (c.code !in 48..57 || c != '.') return
+        if (c.code !in 48..57 && c != '.') return
         lastInput = Symbols.NUM
         if (c == '.') {
             if (currentIsZero()) {
@@ -46,28 +44,33 @@ class Calculator {
         } else {
             if (currentIsZero()) {
                 if (c == '0') return
-                currentInput = c.toString()
-            } else {
-                currentInput += c.toString()
             }
+            currentInput += c.toString()
         }
     }
 
-    fun equal() {
+    fun equal(): String {
         setNumber()
+        if (lastInput != Symbols.NUM) {
+            symbols.removeLast()
+            numbers.removeLast()
+        }
+        return calculate().toString()
     }
 
-//    [1,2,3,4,5]
-//    [*,*,+,*]
-//    26
+    fun getFormula(): String {
+        if (formula == "") return getSafetyCurrentInput()
+        return formula + getSafetyCurrentInput()
+    }
+
     private fun calculate(): Float? {
         val tmpNumbers: MutableList<Fraction> = numbers.toMutableList()
         val tmpSymbols: MutableList<Symbols> = symbols.toMutableList()
         for (s in calcOrder) {
-//            for ((i, n) in symbols.withIndex()) {
+//            TODO:optimization
             var i = 0
             while (i < numbers.count()) {
-                when (s) {
+                when (tmpSymbols[i]) {
                     Symbols.ADD -> {
                         tmpNumbers[i + 1] = tmpNumbers[i].getAdd(tmpNumbers[i + 1])
                         tmpNumbers.removeAt(i)
@@ -104,7 +107,7 @@ class Calculator {
                 i++
             }
         }
-    return tmpNumbers[0].getAsFloat()
+        return tmpNumbers[0].getAsFloat()
     }
 
     private fun currentIsZero(): Boolean {
@@ -120,8 +123,6 @@ class Calculator {
         return currentInput
     }
 
-//    set currentInput to numbers: MutableList<Fraction> as Fraction
-//    this function resolve float
     private fun setNumber() {
         if (currentIsZero()) currentInput = "0"
         val pointIndex = currentInput.indexOf('.')
@@ -131,7 +132,7 @@ class Calculator {
             val split = currentInput.split('.')
             val numerator: String = split[0] + split[1]
             var denominator = "1"
-            for (i in 0..currentInput.length - 1 - pointIndex) {
+            for (i in 0..currentInput.count() - 2 - pointIndex) {
                 denominator += "0"
             }
             numbers.add(Fraction(numerator.toInt(), denominator.toInt()))
