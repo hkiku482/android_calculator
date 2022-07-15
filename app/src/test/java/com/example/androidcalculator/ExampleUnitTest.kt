@@ -11,7 +11,7 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
-    fun formulaTest() {
+    fun inputTest() {
         val c = Calculator()
         c.putNumber('0')
         c.putNumber('0')
@@ -41,5 +41,53 @@ class ExampleUnitTest {
         c.putSymbol(Calculator.Symbols.ADD)
         assertEquals("0 + 20 ÷ 2 + 0.5 - 1.5 + 10 × 5 + 0", c.getFormula())
         assertEquals("59", c.equal())
+    }
+
+    @Test
+    fun errorTest() {
+        val c = Calculator()
+        c.putNumber('4')
+        c.putSymbol(Calculator.Symbols.DIV)
+        c.putNumber('0')
+        assertEquals("エラー", c.equal())
+    }
+
+    @Test
+    fun backSpaceTest() {
+        val c = Calculator()
+        c.putNumber('2')
+        c.putNumber('0')
+        c.putSymbol(Calculator.Symbols.DIV)
+        c.putNumber('2')
+        c.putNumber('0')
+        c.backSpace()
+        assertEquals("10", c.equal())
+    }
+
+    @Test
+    fun clearTest() {
+        val c = Calculator()
+        c.putNumber('2')
+        c.putNumber('0')
+        c.putSymbol(Calculator.Symbols.DIV)
+        c.putNumber('2')
+        c.putNumber('0')
+        c.clear()
+        c.putNumber('2')
+        assertEquals("10", c.equal())
+    }
+
+    @Test
+    fun allClearTest() {
+        val c = Calculator()
+        c.putNumber('3')
+        c.putSymbol(Calculator.Symbols.MULTI)
+        c.putNumber('7')
+        c.allClear()
+        c.putNumber('2')
+        c.putNumber('0')
+        c.putSymbol(Calculator.Symbols.DIV)
+        c.putNumber('2')
+        assertEquals("10", c.equal())
     }
 }

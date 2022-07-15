@@ -8,8 +8,8 @@ class Calculator {
     private var calcOrder: List<Symbols> = listOf(
         Symbols.DIV,
         Symbols.MULTI,
+        Symbols.SUB,
         Symbols.ADD,
-        Symbols.SUB
     )
 
     private var currentInput: String = ""
@@ -54,8 +54,18 @@ class Calculator {
         if (lastInput != Symbols.NUM) {
             symbols.removeLast()
             numbers.removeLast()
+            formula = formula.dropLast(2)
         }
-        return calculate().toString()
+        formula += "$currentInput ="
+        val r = calculate() ?: return "エラー"
+
+        var resultStr = r.toString()
+        if (resultStr.substring(resultStr.length - 2, resultStr.length) == ".0") {
+            resultStr = resultStr.dropLast(2)
+        }
+
+        allClear()
+        return resultStr
     }
 
     fun getFormula(): String {
@@ -63,51 +73,76 @@ class Calculator {
         return formula + getSafetyCurrentInput()
     }
 
+    fun backSpace() {
+        currentInput = currentInput.dropLast(1)
+    }
+
+    fun allClear() {
+        currentInput = ""
+        formula = ""
+        lastInput = Symbols.NUM
+        numbers = mutableListOf()
+        symbols = mutableListOf()
+    }
+
+    fun clear() {
+        currentInput = ""
+    }
+
     private fun calculate(): Float? {
-        val tmpNumbers: MutableList<Fraction> = numbers.toMutableList()
+        val tmpNumbers: MutableList<Fraction?> = numbers.toMutableList()
         val tmpSymbols: MutableList<Symbols> = symbols.toMutableList()
+
         for (s in calcOrder) {
-//            TODO:optimization
-            var i = 0
-            while (i < numbers.count()) {
-                when (tmpSymbols[i]) {
-                    Symbols.ADD -> {
-                        tmpNumbers[i + 1] = tmpNumbers[i].getAdd(tmpNumbers[i + 1])
-                        tmpNumbers.removeAt(i)
-                        tmpSymbols.removeAt(i)
-                        i++
-                    }
-                    Symbols.SUB -> {
-                        tmpNumbers[i + 1] = tmpNumbers[i].getSub(tmpNumbers[i + 1])
-                        tmpNumbers.removeAt(i)
-                        tmpSymbols.removeAt(i)
-                        i++
-                    }
-                    Symbols.MULTI -> {
-                        tmpNumbers[i + 1] = tmpNumbers[i].getMulti(tmpNumbers[i + 1])
-                        tmpNumbers.removeAt(i)
-                        tmpSymbols.removeAt(i)
-                        i++
-                    }
-                    Symbols.DIV -> {
-                        val resultDiv = tmpNumbers[i].getDiv(tmpNumbers[i + 1])
-                        if (resultDiv == null) {
-                            return null
-                        } else {
-                            tmpNumbers[i + 1] = resultDiv
+            for ((i, n) in tmpNumbers.withIndex()) {
+                if (tmpSymbols.count() == i) {
+                    break
+                }
+
+                if (s == tmpSymbols[i]) {
+                    val next = getNextIndex(tmpNumbers, i)
+                    val first = tmpNumbers[i]
+                    val second = tmpNumbers[next]
+                    if ((first == null) || (second == null)) break
+                    when (tmpSymbols[i]) {
+                        Symbols.ADD -> {
+                            tmpNumbers[next] = first.getAdd(second)
+                            tmpNumbers[i] = null
                         }
-                        tmpNumbers.removeAt(i)
-                        tmpSymbols.removeAt(i)
-                        i++
-                    }
-                    Symbols.NUM -> {
-                        return null
+                        Symbols.SUB -> {
+                            tmpSymbols[i] = Symbols.ADD
+                            tmpNumbers[next] = second.toggleSymbol()
+                        }
+                        Symbols.MULTI -> {
+                            tmpNumbers[next] = first.getMulti(second)
+                            tmpNumbers[i] = null
+                        }
+                        Symbols.DIV -> {
+                            tmpNumbers[next] = first.getDiv(second)
+                            if (tmpNumbers[next] == null) return null
+                            tmpNumbers[i] = null
+                        }
+                        Symbols.NUM -> {
+                            return null
+                        }
                     }
                 }
-                i++
             }
         }
-        return tmpNumbers[0].getAsFloat()
+        return tmpNumbers.last()?.getAsFloat()
+    }
+
+    private fun getNextIndex(list: MutableList<Fraction?>, currentIndex: Int ): Int {
+        var i = currentIndex + 1
+        var r = list.count() - 1
+        while (i < list.count()) {
+            if (list[i] != null) {
+                r = i
+                break
+            }
+            i++
+        }
+        return r
     }
 
     private fun currentIsZero(): Boolean {
@@ -153,7 +188,7 @@ class Calculator {
             Symbols.DIV -> {
                 "÷"
             }
-            else -> {
+            Symbols.NUM -> {
                 currentInput
             }
         }

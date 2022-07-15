@@ -14,18 +14,17 @@ class Fraction(numerator: Int, denominator: Int) {
         return numerator.toFloat() / denominator.toFloat()
     }
 
+    fun toggleSymbol(): Fraction {
+        return Fraction(
+            this.numerator * (-1),
+            this.denominator
+        )
+    }
+
     fun getAdd(add: Fraction): Fraction {
         val f = Fraction(
             (this.numerator * add.denominator) + (this.denominator * add.numerator),
             this.denominator * add.denominator
-        )
-        return f.reduction()
-    }
-
-    fun getSub(sub: Fraction): Fraction {
-        val f = Fraction(
-            (this.numerator * sub.denominator) - (this.denominator * sub.numerator),
-            this.denominator * sub.denominator
         )
         return f.reduction()
     }
@@ -43,8 +42,8 @@ class Fraction(numerator: Int, denominator: Int) {
             return null
         }
         val f = Fraction(
-            this.numerator / div.denominator,
-            this.denominator / div.numerator
+            this.numerator * div.denominator,
+            this.denominator * div.numerator
         )
         return f.reduction()
     }
