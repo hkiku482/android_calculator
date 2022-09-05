@@ -84,18 +84,18 @@ class Calculator(presenter: CalculatorPresenter) {
         if (!isFirstInput) {
             when(this.lastOperator) {
                 Operator.ADD -> {
-                    formula.push(toFraction(""), Symbol.ADD)
+                    formula.push(Symbol.ADD, toFraction(""))
                 }
                 Operator.SUB -> {
                     val f = toFraction(currentNumber)
-                    formula.push(Fraction(f.getNumerator() * (-1), f.getDenominator()), Symbol.ADD)
+                    formula.push(Symbol.ADD, Fraction(f.getNumerator() * (-1), f.getDenominator()))
                 }
                 Operator.MULTI -> {
-                    formula.push(toFraction(""), Symbol.MUL)
+                    formula.push(Symbol.MUL, toFraction(""))
                 }
                 Operator.DIV -> {
                     val f = toFraction(currentNumber)
-                    formula.push(Fraction(f.getNumerator(), f.getDenominator()), Symbol.MUL)
+                    formula.push(Symbol.MUL, Fraction(f.getNumerator(), f.getDenominator()))
                 }
                 Operator.EQUAL -> {
                 }

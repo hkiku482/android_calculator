@@ -9,7 +9,7 @@ class Formula(fraction: Fraction) {
         this.symbols = mutableListOf()
     }
 
-    fun push(fraction: Fraction, symbol: Symbol) {
+    fun push(symbol: Symbol, fraction: Fraction) {
         fractions.add(fraction)
         symbols.add(symbol)
     }
@@ -44,6 +44,7 @@ class Formula(fraction: Fraction) {
                             calcFormula.symbols.removeAt(i)
                         }
                     }
+                    i--
                 }
                 i++
             }
