@@ -12,52 +12,52 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun inputTest() {
-        val c = Calculator()
+        val c = Controller()
         c.putNumber('0')
         c.putNumber('0')
         assertEquals("0", c.getFormula())
-        c.putSymbol(Calculator.Symbols.ADD)
+        c.putSymbol(Controller.Symbols.ADD)
         c.putNumber('2')
         c.putNumber('0')
         assertEquals("0 + 20", c.getFormula())
-        c.putSymbol(Calculator.Symbols.SUB)
-        c.putSymbol(Calculator.Symbols.DIV)
+        c.putSymbol(Controller.Symbols.SUB)
+        c.putSymbol(Controller.Symbols.DIV)
         c.putNumber('2')
         assertEquals("0 + 20 ÷ 2", c.getFormula())
-        c.putSymbol(Calculator.Symbols.ADD)
+        c.putSymbol(Controller.Symbols.ADD)
         c.putNumber('.')
         c.putNumber('5')
-        c.putSymbol(Calculator.Symbols.SUB)
+        c.putSymbol(Controller.Symbols.SUB)
         c.putNumber('1')
         c.putNumber('.')
         c.putNumber('.')
         c.putNumber('5')
         assertEquals("0 + 20 ÷ 2 + 0.5 - 1.5", c.getFormula())
-        c.putSymbol(Calculator.Symbols.ADD)
+        c.putSymbol(Controller.Symbols.ADD)
         c.putNumber('1')
         c.putNumber('0')
-        c.putSymbol(Calculator.Symbols.MULTI)
+        c.putSymbol(Controller.Symbols.MULTI)
         c.putNumber('5')
-        c.putSymbol(Calculator.Symbols.ADD)
+        c.putSymbol(Controller.Symbols.ADD)
         assertEquals("0 + 20 ÷ 2 + 0.5 - 1.5 + 10 × 5 + 0", c.getFormula())
         assertEquals("59", c.equal())
     }
 
     @Test
     fun errorTest() {
-        val c = Calculator()
+        val c = Controller()
         c.putNumber('4')
-        c.putSymbol(Calculator.Symbols.DIV)
+        c.putSymbol(Controller.Symbols.DIV)
         c.putNumber('0')
         assertEquals("エラー", c.equal())
     }
 
     @Test
     fun backSpaceTest() {
-        val c = Calculator()
+        val c = Controller()
         c.putNumber('2')
         c.putNumber('0')
-        c.putSymbol(Calculator.Symbols.DIV)
+        c.putSymbol(Controller.Symbols.DIV)
         c.putNumber('2')
         c.putNumber('0')
         c.backSpace()
@@ -66,10 +66,10 @@ class ExampleUnitTest {
 
     @Test
     fun clearTest() {
-        val c = Calculator()
+        val c = Controller()
         c.putNumber('2')
         c.putNumber('0')
-        c.putSymbol(Calculator.Symbols.DIV)
+        c.putSymbol(Controller.Symbols.DIV)
         c.putNumber('2')
         c.putNumber('0')
         c.clear()
@@ -79,14 +79,14 @@ class ExampleUnitTest {
 
     @Test
     fun allClearTest() {
-        val c = Calculator()
+        val c = Controller()
         c.putNumber('3')
-        c.putSymbol(Calculator.Symbols.MULTI)
+        c.putSymbol(Controller.Symbols.MULTI)
         c.putNumber('7')
         c.allClear()
         c.putNumber('2')
         c.putNumber('0')
-        c.putSymbol(Calculator.Symbols.DIV)
+        c.putSymbol(Controller.Symbols.DIV)
         c.putNumber('2')
         assertEquals("10", c.equal())
     }

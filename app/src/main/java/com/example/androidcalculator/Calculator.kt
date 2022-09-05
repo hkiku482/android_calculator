@@ -1,196 +1,130 @@
 package com.example.androidcalculator
 
-class Calculator {
-    enum class Symbols {
-        NUM, ADD, SUB, MULTI, DIV
+import android.graphics.Path
+
+class Calculator(presenter: CalculatorPresenter) {
+    private val presenter: CalculatorPresenter
+    private val formula: Formula
+
+//    registers
+    private var currentNumber: String
+    private var lastOperator: Operator
+
+//    flag
+    private var lastInputIsOperator: Boolean
+    private var isFirstInput: Boolean
+
+    init {
+        this.presenter = presenter
+        this.formula = Formula(Fraction(0))
+
+        this.currentNumber = "0"
+        this.isFirstInput = true
+        this.lastOperator = Operator.EQUAL
+
+        this.lastInputIsOperator = false
+        this.isFirstInput = true
     }
 
-    private var calcOrder: List<Symbols> = listOf(
-        Symbols.DIV,
-        Symbols.MULTI,
-        Symbols.SUB,
-        Symbols.ADD,
-    )
-
-    private var currentInput: String = ""
-    private var formula: String = ""
-    private var lastInput: Symbols = Symbols.NUM
-
-    private var numbers: MutableList<Fraction> = mutableListOf()
-    private var symbols: MutableList<Symbols> = mutableListOf()
-
-    fun putSymbol(s: Symbols) {
-        if (lastInput == Symbols.NUM) {
-            setNumber()
-            formula += "${getSafetyCurrentInput()} ${getSymbolString(s)} "
-        } else {
-            symbols.removeLast()
-            formula = formula.dropLast(2) + "${getSymbolString(s)} "
+    fun putNumber(number: Char) {
+//        number: Char is not 0-9 or .
+        if (number.code !in 48..57 && number != '.') {
+            throw java.lang.Exception("invalid syntax :$number")
         }
-        symbols.add(s)
-        lastInput = s
-        currentInput = ""
+//        . has already entered
+        if (number == '.' && this.currentNumber.indexOf('.') != -1) {
+            return
+        }
+
+        if (currentNumber == "0") {
+            currentNumber = ""
+        }
+
+        currentNumber += number
+        presenter.setPrimaryDisplay(currentNumber)
+        lastInputIsOperator = false
     }
 
-    fun putNumber(c: Char) {
-        if (c.code !in 48..57 && c != '.') return
-        lastInput = Symbols.NUM
-        if (c == '.') {
-            if (currentIsZero()) {
-                currentInput = "0."
-            } else if (currentInput.indexOf('.') == -1 ) {
-                currentInput += "."
+    fun putOperator(operator: Operator) {
+        if (currentNumber.last() == '.') {
+            currentNumber = currentNumber.substring(0, currentNumber.length -1)
+        }
+
+        var display = "${presenter.getFormulaDisplay()} "
+
+//        first input
+        if (isFirstInput) {
+            formula.replaceFirstFraction(toFraction(currentNumber))
+            display = "$currentNumber "
+            lastOperator = operator
+        }
+
+        if (lastInputIsOperator) {
+            display = "${display.substring(0, display.length - 2)} "
+        }
+
+        when(operator) {
+            Operator.ADD -> {
+                display += "+"
             }
-        } else {
-            if (currentIsZero()) {
-                if (c == '0') return
+            Operator.SUB -> {
+                display += "-"
             }
-            currentInput += c.toString()
-        }
-    }
-
-    fun equal(): String {
-        setNumber()
-        if (lastInput != Symbols.NUM) {
-            symbols.removeLast()
-            numbers.removeLast()
-            formula = formula.dropLast(2)
-        }
-        formula += "$currentInput ="
-        val r = calculate() ?: return "エラー"
-
-        var resultStr = r.toString()
-        if (resultStr.substring(resultStr.length - 2, resultStr.length) == ".0") {
-            resultStr = resultStr.dropLast(2)
+            Operator.MULTI -> {
+                display += "×"
+            }
+            Operator.DIV -> {
+                display += "÷"
+            }
+            Operator.EQUAL -> {
+                display += "="
+            }
         }
 
-        allClear()
-        return resultStr
-    }
-
-    fun getFormula(): String {
-        if (formula == "") return getSafetyCurrentInput()
-        return formula + getSafetyCurrentInput()
-    }
-
-    fun backSpace() {
-        currentInput = currentInput.dropLast(1)
-    }
-
-    fun allClear() {
-        currentInput = ""
-        formula = ""
-        lastInput = Symbols.NUM
-        numbers = mutableListOf()
-        symbols = mutableListOf()
-    }
-
-    fun clear() {
-        currentInput = ""
-    }
-
-    private fun calculate(): Float? {
-        val tmpNumbers: MutableList<Fraction?> = numbers.toMutableList()
-        val tmpSymbols: MutableList<Symbols> = symbols.toMutableList()
-
-        for (s in calcOrder) {
-            for ((i, n) in tmpNumbers.withIndex()) {
-                if (tmpSymbols.count() == i) {
-                    break
+        if (!isFirstInput) {
+            when(this.lastOperator) {
+                Operator.ADD -> {
+                    formula.push(toFraction(""), Symbol.ADD)
                 }
-
-                if (s == tmpSymbols[i]) {
-                    val next = getNextIndex(tmpNumbers, i)
-                    val first = tmpNumbers[i]
-                    val second = tmpNumbers[next]
-                    if ((first == null) || (second == null)) break
-                    when (tmpSymbols[i]) {
-                        Symbols.ADD -> {
-                            tmpNumbers[next] = first.getAdd(second)
-                            tmpNumbers[i] = null
-                        }
-                        Symbols.SUB -> {
-                            tmpSymbols[i] = Symbols.ADD
-                            tmpNumbers[next] = second.toggleSymbol()
-                        }
-                        Symbols.MULTI -> {
-                            tmpNumbers[next] = first.getMulti(second)
-                            tmpNumbers[i] = null
-                        }
-                        Symbols.DIV -> {
-                            tmpNumbers[next] = first.getDiv(second)
-                            if (tmpNumbers[next] == null) return null
-                            tmpNumbers[i] = null
-                        }
-                        Symbols.NUM -> {
-                            return null
-                        }
-                    }
+                Operator.SUB -> {
+                    val f = toFraction(currentNumber)
+                    formula.push(Fraction(f.getNumerator() * (-1), f.getDenominator()), Symbol.ADD)
+                }
+                Operator.MULTI -> {
+                    formula.push(toFraction(""), Symbol.MUL)
+                }
+                Operator.DIV -> {
+                    val f = toFraction(currentNumber)
+                    formula.push(Fraction(f.getNumerator(), f.getDenominator()), Symbol.MUL)
+                }
+                Operator.EQUAL -> {
                 }
             }
         }
-        return tmpNumbers.last()?.getAsFloat()
+
+        presenter.setPrimaryDisplay(formula.calculate().toString())
+        presenter.setFormulaDisplay(display)
+
+        currentNumber = "0"
+        lastOperator = operator
+
+        lastInputIsOperator = true
+        isFirstInput = false
     }
 
-    private fun getNextIndex(list: MutableList<Fraction?>, currentIndex: Int ): Int {
-        var i = currentIndex + 1
-        var r = list.count() - 1
-        while (i < list.count()) {
-            if (list[i] != null) {
-                r = i
-                break
-            }
-            i++
-        }
-        return r
-    }
-
-    private fun currentIsZero(): Boolean {
-        if (currentInput == "0.") return false
-        if (currentInput == "") return true
-        if (currentInput.toFloat() == 0F) return true
-        return false
-    }
-
-    private fun getSafetyCurrentInput(): String {
-        if (currentIsZero()) return "0"
-        if (currentInput.substring(currentInput.length) == ".") return currentInput.dropLast(1)
-        return currentInput
-    }
-
-    private fun setNumber() {
-        if (currentIsZero()) currentInput = "0"
-        val pointIndex = currentInput.indexOf('.')
-        if (pointIndex == -1) {
-            numbers.add(Fraction(currentInput.toInt(), 1))
+    private fun toFraction(number: String): Fraction {
+        return if (number.indexOf('.') == -1) {
+            Fraction(number.toInt())
         } else {
-            val split = currentInput.split('.')
-            val numerator: String = split[0] + split[1]
-            var denominator = "1"
-            for (i in 0..currentInput.count() - 2 - pointIndex) {
-                denominator += "0"
+            val split = currentNumber.split('.')
+            val n = split[0] + split[1]
+            var d = "1"
+            for (i in 0..currentNumber.length - 2 - currentNumber.indexOf('.')) {
+                d += "0"
             }
-            numbers.add(Fraction(numerator.toInt(), denominator.toInt()))
+            Fraction(n.toInt(), d.toInt())
         }
     }
 
-    private fun getSymbolString(s: Symbols): String {
-        return when(s) {
-            Symbols.ADD -> {
-                "+"
-            }
-            Symbols.SUB -> {
-                "-"
-            }
-            Symbols.MULTI -> {
-                "×"
-            }
-            Symbols.DIV -> {
-                "÷"
-            }
-            Symbols.NUM -> {
-                currentInput
-            }
-        }
-    }
+    private fun calculate() {}
 }
