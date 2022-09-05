@@ -1,10 +1,8 @@
 package com.example.androidcalculator
 
-import android.graphics.Path
-
 class Calculator(presenter: CalculatorPresenter) {
     private val presenter: CalculatorPresenter
-    private val formula: Formula
+    private var formula: Formula
 
 //    registers
     private var currentNumber: String
@@ -57,6 +55,8 @@ class Calculator(presenter: CalculatorPresenter) {
             formula.replaceFirstFraction(toFraction(currentNumber))
             display = "$currentNumber "
             lastOperator = operator
+        } else {
+            display += "$currentNumber "
         }
 
         if (lastInputIsOperator) {
@@ -84,7 +84,7 @@ class Calculator(presenter: CalculatorPresenter) {
         if (!isFirstInput) {
             when(this.lastOperator) {
                 Operator.ADD -> {
-                    formula.push(Symbol.ADD, toFraction(""))
+                    formula.push(Symbol.ADD, toFraction(currentNumber))
                 }
                 Operator.SUB -> {
                     val f = toFraction(currentNumber)
@@ -98,11 +98,16 @@ class Calculator(presenter: CalculatorPresenter) {
                     formula.push(Symbol.MUL, Fraction(f.getNumerator(), f.getDenominator()))
                 }
                 Operator.EQUAL -> {
+                    val result = formula.calculate().getAsFloat().toString()
+                    val lastFormula = presenter.getFormulaDisplay()
+                    allClear()
+                    presenter.setPrimaryDisplay(result)
+                    presenter.setFormulaDisplay(lastFormula)
                 }
             }
         }
 
-        presenter.setPrimaryDisplay(formula.calculate().toString())
+        presenter.setPrimaryDisplay(formula.calculate().getAsFloat().toString())
         presenter.setFormulaDisplay(display)
 
         currentNumber = "0"
@@ -110,6 +115,17 @@ class Calculator(presenter: CalculatorPresenter) {
 
         lastInputIsOperator = true
         isFirstInput = false
+    }
+
+    private fun allClear() {
+        this.formula = Formula(Fraction(0))
+
+        this.currentNumber = "0"
+        this.isFirstInput = true
+        this.lastOperator = Operator.EQUAL
+
+        this.lastInputIsOperator = false
+        this.isFirstInput = true
     }
 
     private fun toFraction(number: String): Fraction {

@@ -26,7 +26,7 @@ class Formula(fraction: Fraction) {
 
     fun calculate(): Fraction {
         val order = getOperationOrder()
-        val calcFormula: Formula = this
+        val calcFormula: Formula = copy(this.fractions, this.symbols)
 
         for (symbol in order) {
             var i = 0
@@ -62,5 +62,12 @@ class Formula(fraction: Fraction) {
             Symbol.MUL,
             Symbol.ADD,
         )
+    }
+
+    private fun copy(fractions: List<Fraction>, symbols: List<Symbol>): Formula {
+        val newFormula = Formula(Fraction(0))
+        newFormula.fractions = fractions.toMutableList()
+        newFormula.symbols = symbols.toMutableList()
+        return newFormula
     }
 }
