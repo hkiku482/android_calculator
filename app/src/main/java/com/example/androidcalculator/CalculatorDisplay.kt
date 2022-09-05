@@ -1,7 +1,7 @@
 package com.example.androidcalculator
 
 class CalculatorDisplay: CalculatorPresenter {
-    private var resultDisplay: String = "0"
+    private var primaryDisplay: String = "0"
     private var formulaDisplay: String = "0"
 
     override fun setFormulaDisplay(formula: String) {
@@ -12,11 +12,11 @@ class CalculatorDisplay: CalculatorPresenter {
         return formulaDisplay
     }
 
-    override fun setPrimaryDisplay(result: String) {
-        resultDisplay = result
+    override fun setPrimaryDisplay(status: String) {
+        primaryDisplay = status
     }
 
     override fun getPrimaryDisplay(): String {
-        return resultDisplay
+        return primaryDisplay
     }
 }

@@ -18,15 +18,9 @@ class Formula(fraction: Fraction) {
         this.fractions[0] = fraction
     }
 
-    fun replaceLastSymbol(symbol: Symbol) {
-        if (symbols.isNotEmpty()) {
-            this.symbols[this.symbols.count()-2] = symbol
-        }
-    }
-
     fun calculate(): Fraction {
         val order = getOperationOrder()
-        val calcFormula: Formula = copy(this.fractions, this.symbols)
+        val calcFormula: Formula = this
 
         for (symbol in order) {
             var i = 0
@@ -62,12 +56,5 @@ class Formula(fraction: Fraction) {
             Symbol.MUL,
             Symbol.ADD,
         )
-    }
-
-    private fun copy(fractions: List<Fraction>, symbols: List<Symbol>): Formula {
-        val newFormula = Formula(Fraction(0))
-        newFormula.fractions = fractions.toMutableList()
-        newFormula.symbols = symbols.toMutableList()
-        return newFormula
     }
 }
