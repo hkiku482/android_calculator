@@ -28,5 +28,9 @@ class FormulaUnitTest {
         actual = formula.calculate()
         expected = Fraction(16)
         assertEquals(expected.getAsFloat(), actual.getAsFloat())
+
+        actual = formula.calculate()
+        expected = Fraction(16)
+        assertEquals(expected.getAsFloat(), actual.getAsFloat())
     }
 }

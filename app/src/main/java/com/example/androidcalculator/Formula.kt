@@ -20,7 +20,12 @@ class Formula(fraction: Fraction) {
 
     fun calculate(): Fraction {
         val order = getOperationOrder()
-        val calcFormula: Formula = this
+//        val calcFormula: Formula = this
+        val calcFormula = Formula(Fraction(0))
+
+        calcFormula.fractions = mutableListOf()
+        calcFormula.fractions.addAll(this.fractions)
+        calcFormula.symbols.addAll(this.symbols)
 
         for (symbol in order) {
             var i = 0
