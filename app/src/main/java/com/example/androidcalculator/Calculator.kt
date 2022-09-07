@@ -8,22 +8,25 @@ class Calculator(presenter: CalculatorPresenter) {
     private var currentNumber: String
     private var lastOperator: Operator
     private var lastSymbol: Symbol
+    private var lastNum: String
 
 //    flag
     private var lastInputIsOperator: Boolean
     private var isFirstInput: Boolean
+    private var equalEntered: Boolean
 
     init {
         this.presenter = presenter
         this.formula = Formula(Fraction(0))
 
         this.currentNumber = "0"
-        this.isFirstInput = true
         this.lastOperator = Operator.EQUAL
         this.lastSymbol = Symbol.ADD
+        this.lastNum = ""
 
         this.lastInputIsOperator = false
         this.isFirstInput = true
+        this.equalEntered = false
     }
 
     fun putNumber(number: Char) {
@@ -56,67 +59,56 @@ class Calculator(presenter: CalculatorPresenter) {
         if (isFirstInput) {
             formula.replaceFirstFraction(toFraction(currentNumber))
             display = "$currentNumber "
-            lastOperator = operator
+            if (operator != Operator.EQUAL) {
+                lastOperator = operator
+            }
         } else {
             display += "$currentNumber "
+        }
+
+        if (equalEntered) {
+            if (operator == Operator.EQUAL) {
+                retry()
+                return
+            } else {
+                this.equalEntered = false
+                currentNumber = getResult(presenter.getPrimaryDisplay())
+                formula = Formula(Fraction(0))
+                formula.replaceFirstFraction(toFraction(currentNumber))
+                display = "$currentNumber "
+                presenter.setFormulaDisplay(display)
+            }
         }
 
         if (lastInputIsOperator) {
             display = "${display.substring(0, display.length - 5)} "
         }
 
-        when(operator) {
-            Operator.ADD -> {
-                display += "+"
-            }
-            Operator.SUB -> {
-                display += "-"
-            }
-            Operator.MULTI -> {
-                display += "×"
-            }
-            Operator.DIV -> {
-                display += "÷"
-            }
-            Operator.EQUAL -> {
-                display += "="
-            }
-        }
+        display += setOperator(operator)
 
         if (!isFirstInput) {
             if (!this.lastInputIsOperator) {
-                when(this.lastOperator) {
-                    Operator.ADD -> {
-                        formula.push(Symbol.ADD, toFraction(currentNumber))
-                    }
-                    Operator.SUB -> {
-                        val f = toFraction(currentNumber)
-                        formula.push(Symbol.ADD, Fraction(f.getNumerator() * (-1), f.getDenominator()))
-                    }
-                    Operator.MULTI -> {
-                        formula.push(Symbol.MUL, toFraction(currentNumber))
-                    }
-                    Operator.DIV -> {
-                        val f = toFraction(currentNumber)
-                        formula.push(Symbol.MUL, Fraction(f.getDenominator(), f.getNumerator()))
-                    }
-                    Operator.EQUAL -> {}
-                }
+                this.updateFormula()
             }
             if (operator == Operator.EQUAL) {
+                this.lastNum = this.currentNumber
                 val result = formula.calculate().getAsFloat().toString()
                 initialization()
-                presenter.setPrimaryDisplay(setPrimaryDisplay(result))
+                presenter.setPrimaryDisplay(getResult(result))
                 presenter.setFormulaDisplay(display)
+                equalEntered = true
                 return
             }
         }
 
-        presenter.setPrimaryDisplay(setPrimaryDisplay(formula.calculate().getAsFloat().toString()))
+        presenter.setPrimaryDisplay(getResult(formula.calculate().getAsFloat().toString()))
         presenter.setFormulaDisplay(display)
 
         currentNumber = "0"
-        lastOperator = operator
+
+        if (operator != Operator.EQUAL) {
+            lastOperator = operator
+        }
 
         lastInputIsOperator = true
         isFirstInput = false
@@ -131,8 +123,23 @@ class Calculator(presenter: CalculatorPresenter) {
 
         this.lastInputIsOperator = false
         this.isFirstInput = true
+        this.equalEntered = false
         presenter.setPrimaryDisplay("0")
         presenter.setFormulaDisplay("0")
+    }
+
+    fun clear() {
+        this.currentNumber = "0"
+        this.lastInputIsOperator = true
+        presenter.setPrimaryDisplay(this.currentNumber)
+    }
+
+    fun backSpace() {
+        if (this.currentNumber == "0") {
+            return
+        }
+        this.currentNumber = this.currentNumber.substring(0, this.currentNumber.length - 1)
+        presenter.setPrimaryDisplay(this.currentNumber)
     }
 
     private fun initialization() {
@@ -140,10 +147,29 @@ class Calculator(presenter: CalculatorPresenter) {
 
         this.currentNumber = "0"
         this.isFirstInput = true
-        this.lastOperator = Operator.EQUAL
 
         this.lastInputIsOperator = false
         this.isFirstInput = true
+    }
+
+    private fun retry() {
+        val tmp = presenter.getFormulaDisplay().split(' ')
+
+        val lastResult = getResult(presenter.getPrimaryDisplay())
+        val number = tmp[tmp.count() - 2]
+        val newFormula = "${presenter.getPrimaryDisplay()} ${setOperator(lastOperator)} $number ="
+
+        formula = Formula((Fraction(0)))
+        formula.replaceFirstFraction(toFraction(lastResult))
+
+        currentNumber = this.lastNum
+
+        this.updateFormula()
+
+        val result = formula.calculate().getAsFloat().toString()
+
+        presenter.setPrimaryDisplay(getResult(result))
+        presenter.setFormulaDisplay(newFormula)
     }
 
     private fun toFraction(number: String): Fraction {
@@ -160,11 +186,53 @@ class Calculator(presenter: CalculatorPresenter) {
         }
     }
 
-    private fun setPrimaryDisplay(formula: String): String {
-        return if (formula.substring(formula.length - 2, formula.length) == ".0") {
-            formula.substring(0, formula.length - 2)
+    private fun getResult(result: String): String {
+        return if (result.length < 3) {
+            result
+        } else if (result.substring(result.length - 2, result.length) == ".0") {
+            result.substring(0, result.length - 2)
         } else {
-            formula
+            result
+        }
+    }
+
+    private fun setOperator(operator: Operator): String {
+        when(operator) {
+            Operator.ADD -> {
+                return "+"
+            }
+            Operator.SUB -> {
+                return "-"
+            }
+            Operator.MULTI -> {
+                return "×"
+            }
+            Operator.DIV -> {
+                return "÷"
+            }
+            Operator.EQUAL -> {
+                return "="
+            }
+        }
+    }
+
+    private fun updateFormula() {
+        when(this.lastOperator) {
+            Operator.ADD -> {
+                formula.push(Symbol.ADD, toFraction(currentNumber))
+            }
+            Operator.SUB -> {
+                val f = toFraction(currentNumber)
+                formula.push(Symbol.ADD, Fraction(f.getNumerator() * (-1), f.getDenominator()))
+            }
+            Operator.MULTI -> {
+                formula.push(Symbol.MUL, toFraction(currentNumber))
+            }
+            Operator.DIV -> {
+                val f = toFraction(currentNumber)
+                formula.push(Symbol.MUL, Fraction(f.getDenominator(), f.getNumerator()))
+            }
+            Operator.EQUAL -> {}
         }
     }
 }

@@ -40,7 +40,7 @@ class CalculatorUnitTest {
         calc.putNumber('1')
         calc.putOperator(Operator.EQUAL)
         val actual1 = display.pDisplay
-        val expected1: String = 18.0F.toString()
+        val expected1: String = "18"
         assertEquals(expected1, actual1)
 
         val actual2 = display.fDisplay
@@ -77,6 +77,74 @@ class CalculatorUnitTest {
         calc.putOperator(Operator.EQUAL)
         calc.putOperator(Operator.EQUAL)
         calc.putOperator(Operator.EQUAL)
-        assertEquals("3", display.pDisplay)
+        calc.putOperator(Operator.EQUAL)
+        assertEquals("4", display.pDisplay)
+        assertEquals("3 + 1 =", display.fDisplay)
+
+        val display2 = MockDisplay()
+        val calc2 = Calculator(display2)
+        calc2.putNumber('1')
+        calc2.putOperator(Operator.ADD)
+        calc2.putNumber('1')
+        calc2.putOperator(Operator.EQUAL)
+        calc2.putOperator(Operator.EQUAL)
+        calc2.putOperator(Operator.ADD)
+        calc2.putNumber('1')
+        calc2.putNumber('0')
+        calc2.putOperator(Operator.EQUAL)
+        assertEquals("13", display2.pDisplay)
+        assertEquals("3 + 10 =", display2.fDisplay)
+    }
+
+    @Test
+    fun allClearTest() {
+        val display = MockDisplay()
+        val calc = Calculator(display)
+        calc.putNumber('1')
+        calc.putNumber('2')
+        calc.putOperator(Operator.ADD)
+        calc.putNumber('3')
+        calc.allClear()
+        assertEquals("0", display.pDisplay)
+        assertEquals("0", display.pDisplay)
+        calc.putNumber('2')
+        calc.putNumber('2')
+        calc.putOperator(Operator.ADD)
+        calc.putNumber('3')
+        calc.putOperator(Operator.EQUAL)
+        assertEquals("25", display.pDisplay)
+        assertEquals("22 + 3 =", display.fDisplay)
+    }
+
+    @Test
+    fun clearTest() {
+        val display = MockDisplay()
+        val calc = Calculator(display)
+        calc.putNumber('3')
+        calc.putNumber('7')
+        calc.putOperator(Operator.ADD)
+        calc.putNumber('3')
+        calc.putNumber('3')
+        calc.clear()
+        calc.putOperator(Operator.SUB)
+        calc.putNumber('7')
+        calc.putOperator(Operator.EQUAL)
+        assertEquals("30", display.pDisplay)
+        assertEquals("37 - 7 =", display.fDisplay)
+    }
+
+    @Test
+    fun backSpaceTest() {
+        val display = MockDisplay()
+        val calc = Calculator(display)
+        calc.putNumber('3')
+        calc.putNumber('7')
+        calc.putOperator(Operator.ADD)
+        calc.putNumber('3')
+        calc.putNumber('3')
+        calc.backSpace()
+        calc.putOperator(Operator.EQUAL)
+        assertEquals("40", display.pDisplay)
+        assertEquals("37 + 3 =", display.fDisplay)
     }
 }

@@ -1,5 +1,8 @@
 package com.example.androidcalculator
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -14,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         val calculator: Calculator = initCalc()
 
+//        keypad 0-9, .
         findViewById<Button>(R.id.keypad0).setOnClickListener {
             calculator.putNumber('0')
             setDisplay()
@@ -59,19 +63,32 @@ class MainActivity : AppCompatActivity() {
             setDisplay()
         }
 
+//        AC, C, Backspace
         findViewById<Button>(R.id.keypadAC).setOnClickListener {
             calculator.allClear()
             setDisplay()
         }
-        findViewById<Button>(R.id.keypadC).setOnClickListener {}
-        findViewById<Button>(R.id.keypadBS).setOnClickListener {}
-        findViewById<Button>(R.id.keypadCopy).setOnClickListener {}
+        findViewById<Button>(R.id.keypadC).setOnClickListener {
+            calculator.clear()
+            setDisplay()
+        }
+        findViewById<Button>(R.id.keypadBS).setOnClickListener {
+            calculator.backSpace()
+            setDisplay()
+        }
 
+//        System
+        findViewById<Button>(R.id.keypadCopy).setOnClickListener {
+            val clipboardManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip: ClipData = ClipData.newPlainText("", display.getPrimaryDisplay())
+            clipboardManager.setPrimaryClip(clip)
+        }
+
+//        Operators
         findViewById<Button>(R.id.keypadEq).setOnClickListener {
             calculator.putOperator(Operator.EQUAL)
             setDisplay()
         }
-
         findViewById<Button>(R.id.keypadAdd).setOnClickListener {
             calculator.putOperator(Operator.ADD)
             setDisplay()
