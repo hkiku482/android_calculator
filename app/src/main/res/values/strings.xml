@@ -14,8 +14,8 @@
     <string name="eq">=</string>
     <string name="add">+</string>
     <string name="sub">-</string>
-    <string name="multi">*</string>
-    <string name="div">/</string>
+    <string name="multi">×</string>
+    <string name="div">÷</string>
     <string name="bs">BS</string>
     <string name="c">C</string>
     <string name="ac">AC</string>
