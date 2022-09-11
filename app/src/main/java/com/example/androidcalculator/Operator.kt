@@ -1,5 +1,5 @@
 package com.example.androidcalculator
 
 enum class Operator {
-    ADD, SUB, MULTI, DIV, EQUAL
+    ADD, SUB, MUL, DIV, SIN, COS, TAN, EQUAL
 }
