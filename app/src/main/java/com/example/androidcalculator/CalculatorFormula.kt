@@ -19,6 +19,10 @@ class CalculatorFormula {
     }
 
     fun getFormula(): String {
+        if (this.numbers.isEmpty()) {
+            return "0"
+        }
+
         var str = ""
         var i = 0
 
@@ -80,6 +84,10 @@ class CalculatorFormula {
     }
 
     fun calculate(): String {
+        if (this.numbers.isEmpty()) {
+            return "0"
+        }
+
         val formula = Formula(Fraction(0))
         var isFirst = true
 
@@ -100,21 +108,21 @@ class CalculatorFormula {
                     Operator.DIV -> {}
                     Operator.EQUAL -> {}
                     Operator.SIN -> {
-                        val t = cos(calcNumbers[i+1]!!.getFraction().getAsFloat())
+                        val t = sin(Math.toRadians(calcNumbers[i+1]!!.getFraction().getAsFloat().toDouble()))
                         calcNumbers[i+1] = CalculatorNumber(t.toString())
                         calcNumbers.removeAt(i)
                         calcOperators.removeAt(i)
                         i--
                     }
                     Operator.COS -> {
-                        val t = sin(calcNumbers[i+1]!!.getFraction().getAsFloat())
+                        val t = cos(Math.toRadians(calcNumbers[i+1]!!.getFraction().getAsFloat().toDouble()))
                         calcNumbers[i+1] = CalculatorNumber(t.toString())
                         calcNumbers.removeAt(i)
                         calcOperators.removeAt(i)
                         i--
                     }
                     Operator.TAN -> {
-                        val t = tan(calcNumbers[i+1]!!.getFraction().getAsFloat())
+                        val t = tan(Math.toRadians(calcNumbers[i+1]!!.getFraction().getAsFloat().toDouble()))
                         calcNumbers[i+1] = CalculatorNumber(t.toString())
                         calcNumbers.removeAt(i)
                         calcOperators.removeAt(i)
@@ -127,55 +135,34 @@ class CalculatorFormula {
 
 //        Operator last calculation
         i = 0
+        if (calcNumbers.isNotEmpty()) {
+            formula.replaceFirstFraction(calcNumbers[0]!!.getFraction())
+        } else {
+            return "0"
+        }
         while (i < calcNumbers.count()) {
             if (calcOperators[i] != null) {
-                if (isFirst) {
-//                    set first fraction of formula
-                    when(calcOperators[i]!!) {
-                        Operator.ADD -> {
-                            formula.replaceFirstFraction(calcNumbers[i-1]!!.getFraction())
-                        }
-                        Operator.SUB -> {
-                            formula.replaceFirstFraction(calcNumbers[i-1]!!.getFraction())
-                        }
-                        Operator.MUL -> {
-                            formula.replaceFirstFraction(calcNumbers[i-1]!!.getFraction())
-                        }
-                        Operator.DIV -> {
-                            formula.replaceFirstFraction(calcNumbers[i-1]!!.getFraction())
-                        }
-                        Operator.EQUAL -> {
-                            formula.replaceFirstFraction(calcNumbers[i-1]!!.getFraction())
-                            break
-                        }
-                        Operator.SIN -> {}
-                        Operator.COS -> {}
-                        Operator.TAN -> {}
+                when(calcOperators[i]!!) {
+                    Operator.ADD -> {
+                        formula.push(Symbol.ADD, calcNumbers[i + 1]!!.getFraction())
                     }
-                    isFirst = false
-                } else {
-                    when(calcOperators[i]!!) {
-                        Operator.ADD -> {
-                            formula.push(Symbol.ADD, calcNumbers[i]!!.getFraction())
-                        }
-                        Operator.SUB -> {
-                            val f = calcNumbers[i]!!.getFraction()
-                            formula.push(Symbol.ADD, Fraction(f.getNumerator() * -1, f.getDenominator()))
-                        }
-                        Operator.MUL -> {
-                            formula.push(Symbol.MUL, calcNumbers[i]!!.getFraction())
-                        }
-                        Operator.DIV -> {
-                            val f = calcNumbers[i]!!.getFraction()
-                            formula.push(Symbol.MUL, Fraction(f.getDenominator(), f.getNumerator()))
-                        }
-                        Operator.EQUAL -> {
-                            break
-                        }
-                        Operator.SIN -> {}
-                        Operator.COS -> {}
-                        Operator.TAN -> {}
+                    Operator.SUB -> {
+                        val f = calcNumbers[i + 1]!!.getFraction()
+                        formula.push(Symbol.ADD, Fraction(f.getNumerator() * -1, f.getDenominator()))
                     }
+                    Operator.MUL -> {
+                        formula.push(Symbol.MUL, calcNumbers[i + 1]!!.getFraction())
+                    }
+                    Operator.DIV -> {
+                        val f = calcNumbers[i + 1]!!.getFraction()
+                        formula.push(Symbol.MUL, Fraction(f.getDenominator(), f.getNumerator()))
+                    }
+                    Operator.EQUAL -> {
+                        break
+                    }
+                    Operator.SIN -> {}
+                    Operator.COS -> {}
+                    Operator.TAN -> {}
                 }
             }
             i++
