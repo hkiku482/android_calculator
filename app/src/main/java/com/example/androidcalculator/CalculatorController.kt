@@ -19,12 +19,44 @@ class CalculatorController(presenter: CalculatorPresenter) {
         this.presenter = presenter
     }
 
+    fun allClear() {
+        this.cFormula = CalculatorFormula()
+
+        this.currentNumber = "0"
+        this.lastNumber = "0"
+        this.lastCalculationResult = ""
+        this.lastCalculationOperator = Operator.EQUAL
+        this.continuousEqual = false
+        this.continuousOperator = false
+        this.lateEntry = false
+
+        this.presenter.setPrimaryDisplay("0")
+        this.presenter.setFormulaDisplay("0")
+    }
+
     fun clear() {
         this.currentNumber = "0"
         if (lateEntry) {
             this.cFormula.popLast()
             this.lateEntry = false
         }
+    }
+
+    fun backSpace() {
+        if (this.currentNumber != "") {
+            this.currentNumber = this.currentNumber.dropLast(1)
+        }
+        if (this.currentNumber == "") {
+            this.currentNumber = "0"
+        }
+        this.presenter.setPrimaryDisplay(this.currentNumber)
+    }
+
+    fun putConstantNumber(constantValue: String) {
+        this.currentNumber = constantValue
+        this.continuousEqual = false
+        this.continuousOperator = false
+        this.presenter.setPrimaryDisplay(constantValue)
     }
 
     fun putNumber(number: Char) {

@@ -1,14 +1,23 @@
 package com.example.androidcalculator
 
-class CalculatorDisplay: CalculatorPresenter {
+import android.R
+import android.content.Context
+import android.widget.TextView
+
+class CalculatorDisplay(context: Context): CalculatorPresenter {
     private var primaryDisplay: String = "0"
     private var formulaDisplay: String = "0"
+    private var context: Context
 
-    override fun setFormulaDisplay(formula: String) {
-        formulaDisplay = formula
+    init {
+        this.context = context
     }
 
     override fun setPrimaryDisplay(status: String) {
         primaryDisplay = status
+    }
+
+    override fun setFormulaDisplay(formula: String) {
+        formulaDisplay = formula
     }
 }
