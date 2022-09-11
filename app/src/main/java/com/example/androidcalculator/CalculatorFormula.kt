@@ -33,6 +33,31 @@ class CalculatorFormula {
         }
     }
 
+    fun retry(lastResult: String): CalculatorFormula {
+        val f = CalculatorFormula()
+
+        var i = this.operators.count() - 1
+        while (i > -1) {
+            if (this.operators[i] != null) {
+                if (this.operators[i] == Operator.ADD || this.operators[i] == Operator.SUB || this.operators[i] == Operator.MUL || this.operators[i] == Operator.DIV) {
+                    break
+                }
+            }
+            i--
+        }
+
+        f.numbers.add(CalculatorNumber(lastResult))
+        f.operators.add(null)
+        while (i < this.operators.count()) {
+            if (this.operators[i] != Operator.EQUAL) {
+                f.numbers.add(this.numbers[i])
+                f.operators.add(this.operators[i])
+            }
+            i++
+        }
+        return f
+    }
+
     fun getFormula(): String {
         if (this.numbers.isEmpty()) {
             return "0"

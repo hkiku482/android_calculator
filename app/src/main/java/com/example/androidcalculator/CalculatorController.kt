@@ -56,16 +56,15 @@ class CalculatorController(presenter: CalculatorPresenter) {
     fun putOperator(operator: Operator) {
 //        Operator.Equal is entered continuously
         if (this.continuousEqual && operator == Operator.EQUAL) {
-            this.cFormula = CalculatorFormula()
-            this.cFormula.pushNumber(this.lastCalculationResult)
-            this.cFormula.pushOperator(this.lastCalculationOperator)
-            this.cFormula.pushNumber(this.lastNumber)
+            this.cFormula = this.cFormula.retry(this.lastCalculationResult)
             this.cFormula.pushOperator(Operator.EQUAL)
+            this.lastCalculationResult = this.cFormula.getResult()
 
             this.presenter.setPrimaryDisplay(this.cFormula.getResult())
             this.presenter.setFormulaDisplay(this.cFormula.getFormula())
         } else {
             this.continuousEqual = false
+            this.lateEntry = false
 //            entered [sin | cos | tan]
             if (lateEntry) {
                 this.cFormula.pushNumber(currentNumber)
@@ -154,11 +153,15 @@ class CalculatorController(presenter: CalculatorPresenter) {
                     this.lateEntry = true
                 }
             }
+
+            if (!this.lateEntry) {
+                this.lastNumber = this.currentNumber
+                this.currentNumber = "0"
+
+                this.presenter.setPrimaryDisplay(this.cFormula.getResult())
+                this.presenter.setFormulaDisplay(this.cFormula.getFormula())
+            }
         }
 
-        this.lastNumber = this.currentNumber
-        this.currentNumber = "0"
-        this.presenter.setPrimaryDisplay(this.cFormula.getResult())
-        this.presenter.setFormulaDisplay(this.cFormula.getFormula())
     }
 }

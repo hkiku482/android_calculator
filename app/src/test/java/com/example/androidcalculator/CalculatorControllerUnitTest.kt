@@ -38,4 +38,36 @@ class CalculatorControllerUnitTest {
         assertEquals("14.0", display.p)
         assertEquals("2 + 3 × 4 =", display.f)
     }
+
+    @Test
+    fun calculateTest2() {
+        val display = PresenterStub()
+        val cc = CalculatorController(display)
+        cc.putOperator(Operator.TAN)
+        cc.putNumber('4')
+        cc.putNumber('5')
+        cc.putOperator(Operator.MUL)
+        assertEquals("1.0", display.p)
+        cc.putNumber('3')
+        cc.putOperator(Operator.ADD)
+        cc.putOperator(Operator.COS)
+        cc.putNumber('0')
+        cc.putOperator(Operator.EQUAL)
+        assertEquals("4.0", display.p)
+        assertEquals("tan(45°) × 3 + cos(0°) =", display.f)
+    }
+
+    @Test
+    fun calculateTest3() {
+        val display = PresenterStub()
+        val cc = CalculatorController(display)
+        cc.putOperator(Operator.ADD)
+        cc.putOperator(Operator.TAN)
+        cc.putNumber('4')
+        cc.putNumber('5')
+        cc.putOperator(Operator.EQUAL)
+        cc.putOperator(Operator.EQUAL)
+        cc.putOperator(Operator.EQUAL)
+        assertEquals("3.0", display.p)
+    }
 }

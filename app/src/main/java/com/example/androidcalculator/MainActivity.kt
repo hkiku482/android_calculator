@@ -11,71 +11,54 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private val display: CalculatorDisplay = CalculatorDisplay()
+    private val controller: CalculatorController = CalculatorController(display)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val calculator: Calculator = initCalc()
 
 //        keypad 0-9, .
         findViewById<Button>(R.id.keypad0).setOnClickListener {
-            calculator.putNumber('0')
-            setDisplay()
+            controller.putNumber('0')
         }
         findViewById<Button>(R.id.keypad1).setOnClickListener {
-            calculator.putNumber('1')
-            setDisplay()
+            controller.putNumber('1')
         }
         findViewById<Button>(R.id.keypad2).setOnClickListener {
-            calculator.putNumber('2')
-            setDisplay()
+            controller.putNumber('2')
         }
         findViewById<Button>(R.id.keypad3).setOnClickListener {
-            calculator.putNumber('3')
-            setDisplay()
+            controller.putNumber('3')
         }
         findViewById<Button>(R.id.keypad4).setOnClickListener {
-            calculator.putNumber('4')
-            setDisplay()
+            controller.putNumber('4')
         }
         findViewById<Button>(R.id.keypad5).setOnClickListener {
-            calculator.putNumber('5')
-            setDisplay()
+            controller.putNumber('5')
         }
         findViewById<Button>(R.id.keypad6).setOnClickListener {
-            calculator.putNumber('6')
-            setDisplay()
+            controller.putNumber('6')
         }
         findViewById<Button>(R.id.keypad7).setOnClickListener {
-            calculator.putNumber('7')
-            setDisplay()
+            controller.putNumber('7')
         }
         findViewById<Button>(R.id.keypad8).setOnClickListener {
-            calculator.putNumber('8')
-            setDisplay()
+            controller.putNumber('8')
         }
         findViewById<Button>(R.id.keypad9).setOnClickListener {
-            calculator.putNumber('9')
-            setDisplay()
+            controller.putNumber('9')
         }
         findViewById<Button>(R.id.keypadDot).setOnClickListener {
-            calculator.putNumber('.')
-            setDisplay()
+            controller.putNumber('.')
         }
 
 //        AC, C, Backspace
         findViewById<Button>(R.id.keypadAC).setOnClickListener {
-            calculator.allClear()
-            setDisplay()
         }
         findViewById<Button>(R.id.keypadC).setOnClickListener {
-            calculator.clear()
-            setDisplay()
         }
         findViewById<Button>(R.id.keypadBS).setOnClickListener {
-            calculator.backSpace()
-            setDisplay()
         }
 
 //        System
@@ -88,51 +71,40 @@ class MainActivity : AppCompatActivity() {
 //        Operators
         findViewById<Button>(R.id.keypadEq).setOnClickListener {
             try {
-                calculator.putOperator(Operator.EQUAL)
-                setDisplay()
+                controller.putOperator(Operator.EQUAL)
             } catch (e: java.lang.ArithmeticException) {
                 caughtException(e)
             }
         }
         findViewById<Button>(R.id.keypadAdd).setOnClickListener {
             try {
-                calculator.putOperator(Operator.ADD)
-                setDisplay()
+                controller.putOperator(Operator.ADD)
             } catch (e: java.lang.ArithmeticException) {
                 caughtException(e)
             }
         }
         findViewById<Button>(R.id.keypadSub).setOnClickListener {
             try {
-                calculator.putOperator(Operator.SUB)
-                setDisplay()
+                controller.putOperator(Operator.SUB)
             } catch (e: java.lang.ArithmeticException) {
                 caughtException(e)
             }
         }
         findViewById<Button>(R.id.keypadMulti).setOnClickListener {
             try {
-                calculator.putOperator(Operator.MUL)
-                setDisplay()
+                controller.putOperator(Operator.MUL)
             } catch (e: java.lang.ArithmeticException) {
                 caughtException(e)
             }
         }
         findViewById<Button>(R.id.keypadDiv).setOnClickListener {
             try {
-                calculator.putOperator(Operator.DIV)
-                setDisplay()
+                controller.putOperator(Operator.DIV)
             } catch (e: java.lang.ArithmeticException) {
                 caughtException(e)
             }
         }
     }
-
-    private fun initCalc(): Calculator {
-        return Calculator(display)
-    }
-
-    private fun setDisplay() {}
 
     private fun caughtException(e: Exception) {
         findViewById<TextView>(R.id.primaryView).text = e.message
