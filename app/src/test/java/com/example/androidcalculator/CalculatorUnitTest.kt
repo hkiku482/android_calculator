@@ -97,6 +97,47 @@ class CalculatorUnitTest {
     }
 
     @Test
+    fun calculatorTest4() {
+        val display = MockDisplay()
+        val calc = Calculator(display)
+        calc.putNumber('1')
+        calc.putNumber('2')
+        calc.putNumber('3')
+        calc.putNumber('4')
+        calc.putNumber('5')
+        calc.putNumber('6')
+        calc.putNumber('7')
+        calc.putNumber('8')
+        calc.putNumber('9')
+        calc.putOperator(Operator.ADD)
+        calc.putNumber('8')
+        calc.putNumber('7')
+        calc.putNumber('6')
+        calc.putNumber('5')
+        calc.putNumber('4')
+        calc.putNumber('3')
+        calc.putNumber('2')
+        calc.putNumber('1')
+        calc.putNumber('0')
+        calc.putOperator(Operator.EQUAL)
+        assertEquals("1.0E9", display.pDisplay)
+        calc.putOperator(Operator.SUB)
+        calc.putNumber('1')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putNumber('0')
+        calc.putOperator(Operator.EQUAL)
+        assertEquals("1.0E9 - 1000000000 =", display.getFormulaDisplay())
+        assertEquals("0", display.pDisplay)
+    }
+
+    @Test
     fun allClearTest() {
         val display = MockDisplay()
         val calc = Calculator(display)

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private val display: CalculatorDisplay = CalculatorDisplay()
@@ -86,24 +87,44 @@ class MainActivity : AppCompatActivity() {
 
 //        Operators
         findViewById<Button>(R.id.keypadEq).setOnClickListener {
-            calculator.putOperator(Operator.EQUAL)
-            setDisplay()
+            try {
+                calculator.putOperator(Operator.EQUAL)
+                setDisplay()
+            } catch (e: java.lang.ArithmeticException) {
+                caughtException(e)
+            }
         }
         findViewById<Button>(R.id.keypadAdd).setOnClickListener {
-            calculator.putOperator(Operator.ADD)
-            setDisplay()
+            try {
+                calculator.putOperator(Operator.ADD)
+                setDisplay()
+            } catch (e: java.lang.ArithmeticException) {
+                caughtException(e)
+            }
         }
         findViewById<Button>(R.id.keypadSub).setOnClickListener {
-            calculator.putOperator(Operator.SUB)
-            setDisplay()
+            try {
+                calculator.putOperator(Operator.SUB)
+                setDisplay()
+            } catch (e: java.lang.ArithmeticException) {
+                caughtException(e)
+            }
         }
         findViewById<Button>(R.id.keypadMulti).setOnClickListener {
-            calculator.putOperator(Operator.MULTI)
-            setDisplay()
+            try {
+                calculator.putOperator(Operator.MULTI)
+                setDisplay()
+            } catch (e: java.lang.ArithmeticException) {
+                caughtException(e)
+            }
         }
         findViewById<Button>(R.id.keypadDiv).setOnClickListener {
-            calculator.putOperator(Operator.DIV)
-            setDisplay()
+            try {
+                calculator.putOperator(Operator.DIV)
+                setDisplay()
+            } catch (e: java.lang.ArithmeticException) {
+                caughtException(e)
+            }
         }
     }
 
@@ -114,5 +135,10 @@ class MainActivity : AppCompatActivity() {
     private fun setDisplay() {
         findViewById<TextView>(R.id.primaryView).text = display.getPrimaryDisplay()
         findViewById<TextView>(R.id.secondaryView).text = display.getFormulaDisplay()
+    }
+
+    private fun caughtException(e: Exception) {
+        findViewById<TextView>(R.id.primaryView).text = e.message
+        findViewById<TextView>(R.id.secondaryView).text = ""
     }
 }
