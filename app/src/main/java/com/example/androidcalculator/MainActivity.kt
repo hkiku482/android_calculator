@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 //        System
         findViewById<Button>(R.id.keypadCopy).setOnClickListener {
             val clipboardManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip: ClipData = ClipData.newPlainText("", display.getPrimaryDisplay())
+            val clip: ClipData = ClipData.newPlainText("", "display.getPrimaryDisplay()")
             clipboardManager.setPrimaryClip(clip)
         }
 
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.keypadMulti).setOnClickListener {
             try {
-                calculator.putOperator(Operator.MULTI)
+                calculator.putOperator(Operator.MUL)
                 setDisplay()
             } catch (e: java.lang.ArithmeticException) {
                 caughtException(e)
@@ -132,10 +132,7 @@ class MainActivity : AppCompatActivity() {
         return Calculator(display)
     }
 
-    private fun setDisplay() {
-        findViewById<TextView>(R.id.primaryView).text = display.getPrimaryDisplay()
-        findViewById<TextView>(R.id.secondaryView).text = display.getFormulaDisplay()
-    }
+    private fun setDisplay() {}
 
     private fun caughtException(e: Exception) {
         findViewById<TextView>(R.id.primaryView).text = e.message

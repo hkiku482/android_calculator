@@ -8,8 +8,11 @@ class CalculatorFormulaUnitTest {
     fun getFormulaTest() {
         var cf = CalculatorFormula()
         cf.pushNumber("2")
+        assertEquals("2", cf.getFormula())
         cf.pushOperator(Operator.ADD)
+        assertEquals("2 +", cf.getFormula())
         cf.pushNumber("3")
+        assertEquals("2 + 3", cf.getFormula())
         cf.pushOperator(Operator.MUL)
         cf.pushNumber("4")
         cf.pushOperator(Operator.SUB)
@@ -21,8 +24,11 @@ class CalculatorFormulaUnitTest {
 
         cf = CalculatorFormula()
         cf.pushOperator(Operator.SIN)
+        assertEquals("sin()", cf.getFormula())
         cf.pushNumber("10")
+        assertEquals("sin(10°)", cf.getFormula())
         cf.pushOperator(Operator.ADD)
+        assertEquals("sin(10°) +", cf.getFormula())
         cf.pushOperator(Operator.COS)
         cf.pushNumber("20")
         cf.pushOperator(Operator.ADD)
@@ -42,7 +48,7 @@ class CalculatorFormulaUnitTest {
         cf.pushOperator(Operator.MUL)
         cf.pushNumber("4")
         cf.pushOperator(Operator.EQUAL)
-        assertEquals("14.0", cf.calculate())
+        assertEquals("14.0", cf.getResult())
 
 //        Trigonometric functions
         cf = CalculatorFormula()
@@ -53,24 +59,23 @@ class CalculatorFormulaUnitTest {
         cf.pushOperator(Operator.ADD)
         cf.pushOperator(Operator.TAN)
         cf.pushNumber("45")
-        cf.pushOperator(Operator.EQUAL)
         cf.pushOperator(Operator.DIV)
         cf.pushOperator(Operator.SIN)
         cf.pushNumber("90")
         cf.pushOperator(Operator.EQUAL)
-        assertEquals("5.0", cf.calculate())
+        assertEquals("5.0", cf.getResult())
 
 //        without equal
         cf = CalculatorFormula()
         cf.pushOperator(Operator.COS)
         cf.pushNumber("0")
-        assertEquals("1.0", cf.calculate())
+        assertEquals("1.0", cf.getResult())
 
         cf = CalculatorFormula()
         cf.pushNumber("7")
-        assertEquals("7.0", cf.calculate())
+        assertEquals("7.0", cf.getResult())
 
         cf = CalculatorFormula()
-        assertEquals("0", cf.calculate())
+        assertEquals("0", cf.getResult())
     }
 }

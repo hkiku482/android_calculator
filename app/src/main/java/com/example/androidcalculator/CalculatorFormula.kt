@@ -18,6 +18,21 @@ class CalculatorFormula {
         this.operators.add(operator)
     }
 
+    fun popLast(){
+        this.numbers.removeLast()
+        this.operators.removeLast()
+    }
+
+    fun replaceLastOperator(operator: Operator) {
+        var i = this.operators.count() - 1
+        while (i > -1) {
+            if (this.operators[i] != null) {
+                this.operators[i] = operator
+            }
+            i--
+        }
+    }
+
     fun getFormula(): String {
         if (this.numbers.isEmpty()) {
             return "0"
@@ -49,7 +64,7 @@ class CalculatorFormula {
                     }
                     Operator.SIN -> {
                         val ope = "sin"
-                        if (i + 1 <= this.numbers.count()) {
+                        if (i + 1 < this.numbers.count()) {
                             str += "$ope(${this.numbers[i+1]!!.getRowValue()}°)"
                             i++
                         } else {
@@ -58,7 +73,7 @@ class CalculatorFormula {
                     }
                     Operator.COS -> {
                         val ope = "cos"
-                        if (i + 1 <= this.numbers.count()) {
+                        if (i + 1 < this.numbers.count()) {
                             str += "$ope(${this.numbers[i+1]!!.getRowValue()}°)"
                             i++
                         } else {
@@ -67,7 +82,7 @@ class CalculatorFormula {
                     }
                     Operator.TAN -> {
                         val ope = "tan"
-                        if (i + 1 <= this.numbers.count()) {
+                        if (i + 1 < this.numbers.count()) {
                             str += "$ope(${this.numbers[i+1]!!.getRowValue()}°)"
                             i++
                         } else {
@@ -80,10 +95,13 @@ class CalculatorFormula {
                 throw java.lang.Error("class error")
             }
         }
+        if (str.last() == ' ') {
+            str = str.substring(0, str.length-1)
+        }
         return str
     }
 
-    fun calculate(): String {
+    fun getResult(): String {
         if (this.numbers.isEmpty()) {
             return "0"
         }
@@ -141,7 +159,7 @@ class CalculatorFormula {
             return "0"
         }
         while (i < calcNumbers.count()) {
-            if (calcOperators[i] != null) {
+            if (calcOperators[i] != null && i + 1 < calcNumbers.count()) {
                 when(calcOperators[i]!!) {
                     Operator.ADD -> {
                         formula.push(Symbol.ADD, calcNumbers[i + 1]!!.getFraction())
