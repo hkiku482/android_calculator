@@ -1,12 +1,19 @@
 package com.example.androidcalculator
 
-import kotlin.math.sin
 import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.tan
 
 class CalculatorFormula {
     private var numbers: MutableList<CalculatorNumber?> = mutableListOf()
     private var operators: MutableList<Operator?> = mutableListOf()
+
+    private fun formatNumber(d: Double): String {
+        return if (d == d.toLong().toDouble()) String.format(
+            "%d",
+            d.toLong()
+        ) else String.format("%s", d)
+    }
 
     fun pushNumber(number: String) {
         this.numbers.add(CalculatorNumber(number))
@@ -68,7 +75,7 @@ class CalculatorFormula {
 
         while (i < this.numbers.count()) {
             if (this.numbers[i] != null) {
-                str += this.numbers[i]!!.getRowValue()
+                str += formatNumber(this.numbers[i]!!.getRowValue().toDouble())
                 i++
             } else if (this.operators[i] != null) {
                 when(this.operators[i]!!) {
@@ -90,7 +97,7 @@ class CalculatorFormula {
                     Operator.SIN -> {
                         val ope = "sin"
                         if (i + 1 < this.numbers.count()) {
-                            str += "$ope(${this.numbers[i+1]!!.getRowValue()}°)"
+                            str += "$ope(${formatNumber(this.numbers[i]!!.getRowValue().toDouble())}°)"
                             i++
                         } else {
                             str += "$ope()"
@@ -99,7 +106,7 @@ class CalculatorFormula {
                     Operator.COS -> {
                         val ope = "cos"
                         if (i + 1 < this.numbers.count()) {
-                            str += "$ope(${this.numbers[i+1]!!.getRowValue()}°)"
+                            str += "$ope(${formatNumber(this.numbers[i]!!.getRowValue().toDouble())}°)"
                             i++
                         } else {
                             str += "$ope()"
@@ -108,7 +115,7 @@ class CalculatorFormula {
                     Operator.TAN -> {
                         val ope = "tan"
                         if (i + 1 < this.numbers.count()) {
-                            str += "$ope(${this.numbers[i+1]!!.getRowValue()}°)"
+                            str += "$ope(${formatNumber(this.numbers[i]!!.getRowValue().toDouble())}°)"
                             i++
                         } else {
                             str += "$ope()"
@@ -210,6 +217,6 @@ class CalculatorFormula {
             }
             i++
         }
-        return formula.calculate().getAsFloat().toString()
+        return this.formatNumber(formula.calculate().getAsFloat().toDouble())
     }
 }
