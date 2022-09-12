@@ -1,118 +1,134 @@
 package com.example.androidcalculator
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-    private val display: CalculatorDisplay = CalculatorDisplay()
+    private val display: CalculatorDisplay = CalculatorDisplay(this)
+    private val controller: CalculatorController = CalculatorController(display)
+    private var isFirstMode: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val calculator: Calculator = initCalc()
+        findViewById<Button>(R.id.keypadToggleFunc).setOnClickListener {
+            if (this.isFirstMode) {
+                findViewById<Button>(R.id.keypadToggleFunc).text = getString(R.string.second)
+                findViewById<Button>(R.id.keypadF0).text = getString(R.string.pi)
+                findViewById<Button>(R.id.keypadF1).text = getString(R.string.sin)
+                findViewById<Button>(R.id.keypadF2).text = getString(R.string.cos)
+                findViewById<Button>(R.id.keypadF3).text = getString(R.string.tan)
+            } else {
+                findViewById<Button>(R.id.keypadToggleFunc).text = getString(R.string.first)
+                findViewById<Button>(R.id.keypadF0).text = getString(R.string.pi)
+                findViewById<Button>(R.id.keypadF0).text = getString(R.string.eq)
+                findViewById<Button>(R.id.keypadF1).text = getString(R.string.ac)
+                findViewById<Button>(R.id.keypadF2).text = getString(R.string.c)
+                findViewById<Button>(R.id.keypadF3).text = getString(R.string.bs)
+            }
+            this.isFirstMode = !this.isFirstMode
+        }
 
 //        keypad 0-9, .
         findViewById<Button>(R.id.keypad0).setOnClickListener {
-            calculator.putNumber('0')
-            setDisplay()
+            this.controller.putNumber('0')
         }
         findViewById<Button>(R.id.keypad1).setOnClickListener {
-            calculator.putNumber('1')
-            setDisplay()
+            this.controller.putNumber('1')
         }
         findViewById<Button>(R.id.keypad2).setOnClickListener {
-            calculator.putNumber('2')
-            setDisplay()
+            this.controller.putNumber('2')
         }
         findViewById<Button>(R.id.keypad3).setOnClickListener {
-            calculator.putNumber('3')
-            setDisplay()
+            this.controller.putNumber('3')
         }
         findViewById<Button>(R.id.keypad4).setOnClickListener {
-            calculator.putNumber('4')
-            setDisplay()
+            this.controller.putNumber('4')
         }
         findViewById<Button>(R.id.keypad5).setOnClickListener {
-            calculator.putNumber('5')
-            setDisplay()
+            this.controller.putNumber('5')
         }
         findViewById<Button>(R.id.keypad6).setOnClickListener {
-            calculator.putNumber('6')
-            setDisplay()
+            this.controller.putNumber('6')
         }
         findViewById<Button>(R.id.keypad7).setOnClickListener {
-            calculator.putNumber('7')
-            setDisplay()
+            this.controller.putNumber('7')
         }
         findViewById<Button>(R.id.keypad8).setOnClickListener {
-            calculator.putNumber('8')
-            setDisplay()
+            this.controller.putNumber('8')
         }
         findViewById<Button>(R.id.keypad9).setOnClickListener {
-            calculator.putNumber('9')
-            setDisplay()
+            this.controller.putNumber('9')
         }
         findViewById<Button>(R.id.keypadDot).setOnClickListener {
-            calculator.putNumber('.')
-            setDisplay()
+            this.controller.putNumber('.')
         }
 
 //        AC, C, Backspace
-        findViewById<Button>(R.id.keypadAC).setOnClickListener {
-            calculator.allClear()
-            setDisplay()
+        findViewById<Button>(R.id.keypadF1).setOnClickListener {
+            if (this.isFirstMode) {
+                this.controller.allClear()
+            } else {
+                this.controller.putOperator(Operator.SIN)
+            }
         }
-        findViewById<Button>(R.id.keypadC).setOnClickListener {
-            calculator.clear()
-            setDisplay()
+        findViewById<Button>(R.id.keypadF2).setOnClickListener {
+            if (this.isFirstMode) {
+                this.controller.clear()
+            } else {
+                this.controller.putOperator(Operator.COS)
+            }
         }
-        findViewById<Button>(R.id.keypadBS).setOnClickListener {
-            calculator.backSpace()
-            setDisplay()
-        }
-
-//        System
-        findViewById<Button>(R.id.keypadCopy).setOnClickListener {
-            val clipboardManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip: ClipData = ClipData.newPlainText("", display.getPrimaryDisplay())
-            clipboardManager.setPrimaryClip(clip)
+        findViewById<Button>(R.id.keypadF3).setOnClickListener {
+            if (this.isFirstMode) {
+                this.controller.backSpace()
+            } else {
+                this.controller.putOperator(Operator.TAN)
+            }
         }
 
 //        Operators
-        findViewById<Button>(R.id.keypadEq).setOnClickListener {
-            calculator.putOperator(Operator.EQUAL)
-            setDisplay()
+        findViewById<Button>(R.id.keypadF0).setOnClickListener {
+            if (this.isFirstMode) {
+                try {
+                    this.controller.putOperator(Operator.EQUAL)
+                } catch (e: java.lang.ArithmeticException) {
+                    findViewById<TextView>(R.id.primaryView).text = getString(R.string.error)
+                }
+            } else {
+                this.controller.putConstantNumber(kotlin.math.PI.toString())
+            }
         }
         findViewById<Button>(R.id.keypadAdd).setOnClickListener {
-            calculator.putOperator(Operator.ADD)
-            setDisplay()
+            try {
+                this.controller.putOperator(Operator.ADD)
+            } catch (e: java.lang.ArithmeticException) {
+                findViewById<TextView>(R.id.primaryView).text = getString(R.string.error)
+            }
         }
         findViewById<Button>(R.id.keypadSub).setOnClickListener {
-            calculator.putOperator(Operator.SUB)
-            setDisplay()
+            try {
+                this.controller.putOperator(Operator.SUB)
+            } catch (e: java.lang.ArithmeticException) {
+                findViewById<TextView>(R.id.primaryView).text = getString(R.string.error)
+            }
         }
         findViewById<Button>(R.id.keypadMulti).setOnClickListener {
-            calculator.putOperator(Operator.MULTI)
-            setDisplay()
+            try {
+                this.controller.putOperator(Operator.MUL)
+            } catch (e: java.lang.ArithmeticException) {
+                findViewById<TextView>(R.id.primaryView).text = getString(R.string.error)
+            }
         }
         findViewById<Button>(R.id.keypadDiv).setOnClickListener {
-            calculator.putOperator(Operator.DIV)
-            setDisplay()
+            try {
+                this.controller.putOperator(Operator.DIV)
+            } catch (e: java.lang.ArithmeticException) {
+                findViewById<TextView>(R.id.primaryView).text = getString(R.string.error)
+            }
         }
-    }
-
-    private fun initCalc(): Calculator {
-        return Calculator(display)
-    }
-
-    private fun setDisplay() {
-        findViewById<TextView>(R.id.primaryView).text = display.getPrimaryDisplay()
-        findViewById<TextView>(R.id.secondaryView).text = display.getFormulaDisplay()
     }
 }

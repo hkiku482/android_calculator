@@ -19,5 +19,11 @@
     <string name="bs">BS</string>
     <string name="c">C</string>
     <string name="ac">AC</string>
-    <string name="cp">CP</string>
+    <string name="first">1st</string>
+    <string name="second">2nd</string>
+    <string name="pi">π</string>
+    <string name="sin">sinθ</string>
+    <string name="cos">cosθ</string>
+    <string name="tan">tanθ</string>
+    <string name="error">エラー</string>
 </resources>

@@ -9,6 +9,13 @@ class Formula(fraction: Fraction) {
         this.symbols = mutableListOf()
     }
 
+    private fun getOperationOrder(): List<Symbol> {
+        return listOf(
+            Symbol.MUL,
+            Symbol.ADD,
+        )
+    }
+
     fun push(symbol: Symbol, fraction: Fraction) {
         fractions.add(fraction)
         symbols.add(symbol)
@@ -54,12 +61,5 @@ class Formula(fraction: Fraction) {
         } else {
             return calcFormula.fractions[0]
         }
-    }
-
-    private fun getOperationOrder(): List<Symbol> {
-        return listOf(
-            Symbol.MUL,
-            Symbol.ADD,
-        )
     }
 }

@@ -1,26 +1,26 @@
 package com.example.androidcalculator
 
-class Fraction(numerator: Int, denominator: Int = 1) {
-    private val numerator: Int
-    private val denominator:Int
+class Fraction(numerator: Long, denominator: Long = 1) {
+    private val numerator: Long
+    private val denominator: Long
 
     init {
-        if (denominator == 0) {
+        if (denominator == 0.toLong()) {
             throw java.lang.ArithmeticException("denominator cannot be zero")
         }
 
-        if (denominator == 1) {
+        if (denominator == 1.toLong()) {
             this.numerator = numerator
             this.denominator = 1
         } else {
 //            reduction
-            var a: Int = numerator
-            var b: Int = denominator
-            var r: Int
+            var a: Long = numerator
+            var b: Long = denominator
+            var r: Long
 
             while (true) {
                 r = a % b
-                if (r == 0){
+                if (r == 0.toLong()){
                     break
                 }
                 a = b
@@ -36,11 +36,11 @@ class Fraction(numerator: Int, denominator: Int = 1) {
         return numerator.toFloat() / denominator.toFloat()
     }
 
-    fun getNumerator(): Int {
+    fun getNumerator(): Long {
         return numerator
     }
 
-    fun getDenominator(): Int {
+    fun getDenominator(): Long {
         return denominator
     }
 }
