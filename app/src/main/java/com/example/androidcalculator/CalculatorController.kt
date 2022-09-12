@@ -1,5 +1,7 @@
 package com.example.androidcalculator
 
+import android.graphics.Path
+
 class CalculatorController(presenter: CalculatorPresenter) {
     private val presenter: CalculatorPresenter
     private var cFormula: CalculatorFormula = CalculatorFormula()
@@ -100,93 +102,64 @@ class CalculatorController(presenter: CalculatorPresenter) {
             this.presenter.setPrimaryDisplay(this.cFormula.getResult())
             this.presenter.setFormulaDisplay(this.cFormula.getFormula())
         } else {
-            this.continuousEqual = false
             this.lateEntry = false
 //            entered [sin | cos | tan]
             if (lateEntry) {
                 this.cFormula.pushNumber(currentNumber)
             }
 
-            when(operator) {
-                Operator.ADD -> {
-                    val ope = Operator.ADD
+            if (operator == Operator.ADD || operator == Operator.SUB || operator == Operator.MUL || operator == Operator.DIV) {
+//                four arithmetic operations
+                if (this.continuousEqual) {
+                    this.cFormula = CalculatorFormula()
+                    this.cFormula.pushNumber(this.lastCalculationResult)
+                    this.continuousEqual = false
+                    this.continuousOperator = false
+                } else {
                     this.cFormula.pushNumber(this.currentNumber)
-                    if (this.continuousOperator) {
-                        this.cFormula.replaceLastOperator(ope)
-                    } else {
-                        this.cFormula.pushOperator(ope)
-                    }
-                    this.continuousOperator = true
-                    this.lastCalculationOperator = ope
                 }
-                Operator.SUB -> {
-                    val ope = Operator.SUB
-                    this.cFormula.pushNumber(this.currentNumber)
-                    if (this.continuousOperator) {
-                        this.cFormula.replaceLastOperator(ope)
-                    } else {
-                        this.cFormula.pushOperator(ope)
-                    }
-                    this.continuousOperator = true
-                    this.lastCalculationOperator = ope
+                if (this.continuousOperator) {
+                    this.cFormula.replaceLastOperator(operator)
+                } else {
+                    this.cFormula.pushOperator(operator)
                 }
-                Operator.MUL -> {
-                    val ope = Operator.MUL
-                    this.cFormula.pushNumber(this.currentNumber)
-                    if (this.continuousOperator) {
-                        this.cFormula.replaceLastOperator(ope)
-                    } else {
-                        this.cFormula.pushOperator(ope)
-                    }
-                    this.continuousOperator = true
-                    this.lastCalculationOperator = ope
+                this.continuousOperator = true
+                this.lastCalculationOperator = operator
+            } else if (operator == Operator.EQUAL) {
+//                equal
+                val ope = Operator.EQUAL
+                this.cFormula.pushNumber(this.currentNumber)
+                if (this.continuousOperator) {
+                    this.cFormula.replaceLastOperator(ope)
+                } else {
+                    this.cFormula.pushOperator(ope)
                 }
-                Operator.DIV -> {
-                    val ope = Operator.DIV
-                    this.cFormula.pushNumber(this.currentNumber)
-                    if (this.continuousOperator) {
-                        this.cFormula.replaceLastOperator(ope)
-                    } else {
-                        this.cFormula.pushOperator(ope)
-                    }
-                    this.continuousOperator = true
-                    this.lastCalculationOperator = ope
-                }
-                Operator.EQUAL -> {
-                    val ope = Operator.EQUAL
-                    this.cFormula.pushNumber(this.currentNumber)
-                    if (this.continuousOperator) {
-                        this.cFormula.replaceLastOperator(ope)
-                    } else {
-                        this.cFormula.pushOperator(ope)
-                    }
 
 //                    prepare to continue equal entering
-                    this.lastCalculationResult = this.cFormula.getResult()
-                    this.continuousEqual = true
+                this.lastCalculationResult = this.cFormula.getResult()
+                this.continuousEqual = true
+                this.continuousOperator = true
 
 //                    set presenter
-                    this.presenter.setPrimaryDisplay(this.cFormula.getResult())
-                    this.presenter.setFormulaDisplay(this.cFormula.getFormula())
+                this.presenter.setPrimaryDisplay(this.cFormula.getResult())
+                this.presenter.setFormulaDisplay(this.cFormula.getFormula())
 
 //                    initialization
-                    this.lastNumber = this.currentNumber
-                    this.currentNumber = "0"
-                    this.continuousOperator = false
-                    this.lateEntry = false
+                this.lastNumber = this.currentNumber
+                this.currentNumber = "0"
+                this.lateEntry = false
 
-                    return
-                }
-                Operator.SIN -> {
-                    this.cFormula.pushOperator(Operator.SIN)
-                    this.lateEntry = true
-                }
-                Operator.COS -> {
-                    this.cFormula.pushOperator(Operator.COS)
-                    this.lateEntry = true
-                }
-                Operator.TAN -> {
-                    this.cFormula.pushOperator(Operator.TAN)
+                return
+            } else if (operator == Operator.SIN || operator == Operator.COS || operator == Operator.TAN) {
+//                trigonometric function
+                if (this.continuousEqual) {
+                    this.cFormula = CalculatorFormula()
+                    this.cFormula.pushOperator(operator)
+                    this.cFormula.pushNumber(this.lastCalculationResult)
+                    this.continuousEqual = false
+                    this.continuousOperator = false
+                } else {
+                    this.cFormula.pushOperator(operator)
                     this.lateEntry = true
                 }
             }

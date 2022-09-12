@@ -55,6 +55,9 @@ class CalculatorFormula {
 
         f.numbers.add(CalculatorNumber(lastResult))
         f.operators.add(null)
+        if (i < 0) {
+            i = 0
+        }
         while (i < this.operators.count()) {
             if (this.operators[i] != Operator.EQUAL) {
                 f.numbers.add(this.numbers[i])
