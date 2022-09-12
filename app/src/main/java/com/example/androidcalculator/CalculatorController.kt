@@ -90,6 +90,9 @@ class CalculatorController(presenter: CalculatorPresenter) {
     fun putOperator(operator: Operator) {
 //        Operator.Equal is entered continuously
         if (this.continuousEqual && operator == Operator.EQUAL) {
+            if (this.lastCalculationOperator == Operator.EQUAL) {
+                return
+            }
             this.cFormula = this.cFormula.retry(this.lastCalculationResult)
             this.cFormula.pushOperator(Operator.EQUAL)
             this.lastCalculationResult = this.cFormula.getResult()
