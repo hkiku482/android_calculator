@@ -55,6 +55,9 @@ class CalculatorFormula {
 
         f.numbers.add(CalculatorNumber(lastResult))
         f.operators.add(null)
+        if (i < 0) {
+            i = 0
+        }
         while (i < this.operators.count()) {
             if (this.operators[i] != Operator.EQUAL) {
                 f.numbers.add(this.numbers[i])
@@ -97,7 +100,7 @@ class CalculatorFormula {
                     Operator.SIN -> {
                         val ope = "sin"
                         if (i + 1 < this.numbers.count()) {
-                            str += "$ope(${formatNumber(this.numbers[i]!!.getRowValue().toDouble())}°)"
+                            str += "$ope(${formatNumber(this.numbers[i+1]!!.getRowValue().toDouble())}°)"
                             i++
                         } else {
                             str += "$ope()"
@@ -106,7 +109,7 @@ class CalculatorFormula {
                     Operator.COS -> {
                         val ope = "cos"
                         if (i + 1 < this.numbers.count()) {
-                            str += "$ope(${formatNumber(this.numbers[i]!!.getRowValue().toDouble())}°)"
+                            str += "$ope(${formatNumber(this.numbers[i+1]!!.getRowValue().toDouble())}°)"
                             i++
                         } else {
                             str += "$ope()"
@@ -115,7 +118,7 @@ class CalculatorFormula {
                     Operator.TAN -> {
                         val ope = "tan"
                         if (i + 1 < this.numbers.count()) {
-                            str += "$ope(${formatNumber(this.numbers[i]!!.getRowValue().toDouble())}°)"
+                            str += "$ope(${formatNumber(this.numbers[i+1]!!.getRowValue().toDouble())}°)"
                             i++
                         } else {
                             str += "$ope()"
