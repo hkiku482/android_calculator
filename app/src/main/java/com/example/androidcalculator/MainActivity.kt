@@ -16,11 +16,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.keypadToggleFunc).setOnClickListener {
             if (this.isFirstMode) {
+                findViewById<Button>(R.id.keypadToggleFunc).text = getString(R.string.second)
                 findViewById<Button>(R.id.keypadF0).text = getString(R.string.pi)
                 findViewById<Button>(R.id.keypadF1).text = getString(R.string.sin)
                 findViewById<Button>(R.id.keypadF2).text = getString(R.string.cos)
                 findViewById<Button>(R.id.keypadF3).text = getString(R.string.tan)
             } else {
+                findViewById<Button>(R.id.keypadToggleFunc).text = getString(R.string.first)
+                findViewById<Button>(R.id.keypadF0).text = getString(R.string.pi)
                 findViewById<Button>(R.id.keypadF0).text = getString(R.string.eq)
                 findViewById<Button>(R.id.keypadF1).text = getString(R.string.ac)
                 findViewById<Button>(R.id.keypadF2).text = getString(R.string.c)

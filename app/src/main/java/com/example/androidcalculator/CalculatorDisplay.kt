@@ -1,6 +1,5 @@
 package com.example.androidcalculator
 
-import android.R
 import android.content.Context
 import android.widget.TextView
 
@@ -14,10 +13,12 @@ class CalculatorDisplay(context: Context): CalculatorPresenter {
     }
 
     override fun setPrimaryDisplay(status: String) {
-        primaryDisplay = status
+        this.primaryDisplay = status
+        (context as MainActivity).findViewById<TextView>(R.id.primaryView).text = this.primaryDisplay
     }
 
     override fun setFormulaDisplay(formula: String) {
-        formulaDisplay = formula
+        this.formulaDisplay = formula
+        (context as MainActivity).findViewById<TextView>(R.id.secondaryView).text = this.primaryDisplay
     }
 }
