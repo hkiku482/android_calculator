@@ -16,7 +16,20 @@ class CalculatorNumber(number: String) {
             for (i in 0..safeNum.length - 2 - safeNum.indexOf('.')) {
                 d += "0"
             }
-            Fraction(n.toLong(), d.toLong())
+
+//            TODO: resolve unsafe
+            val sd: String = if (d.length > 17) {
+                d.substring(0, 17)
+            } else {
+                d
+            }
+            val sn: String = if (n.length > 17) {
+                n.substring(0, 17)
+            } else {
+                n
+            }
+
+            Fraction(sn.toLong(), sd.toLong())
         }
         this.rowValue = safeNum
     }
