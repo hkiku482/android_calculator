@@ -48,7 +48,7 @@ class CalculatorFormulaUnitTest {
         cf.pushOperator(Operator.MUL)
         cf.pushNumber("4")
         cf.pushOperator(Operator.EQUAL)
-        assertEquals("14.0", cf.getResult())
+        assertEquals("14", cf.getResult())
 
 //        Trigonometric functions
         cf = CalculatorFormula()
@@ -63,17 +63,17 @@ class CalculatorFormulaUnitTest {
         cf.pushOperator(Operator.SIN)
         cf.pushNumber("90")
         cf.pushOperator(Operator.EQUAL)
-        assertEquals("5.0", cf.getResult())
+        assertEquals("5", cf.getResult())
 
 //        without equal
         cf = CalculatorFormula()
         cf.pushOperator(Operator.COS)
         cf.pushNumber("0")
-        assertEquals("1.0", cf.getResult())
+        assertEquals("1", cf.getResult())
 
         cf = CalculatorFormula()
         cf.pushNumber("7")
-        assertEquals("7.0", cf.getResult())
+        assertEquals("7", cf.getResult())
 
         cf = CalculatorFormula()
         assertEquals("0", cf.getResult())
