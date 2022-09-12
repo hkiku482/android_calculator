@@ -1,7 +1,5 @@
 package com.example.androidcalculator
 
-import android.util.Log
-
 class Fraction(numerator: Long, denominator: Long = 1) {
     private val numerator: Long
     private val denominator: Long
