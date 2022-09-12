@@ -40,6 +40,8 @@ class CalculatorController(presenter: CalculatorPresenter) {
             this.cFormula.popLast()
             this.lateEntry = false
         }
+
+        this.presenter.setPrimaryDisplay(this.currentNumber)
     }
 
     fun backSpace() {
