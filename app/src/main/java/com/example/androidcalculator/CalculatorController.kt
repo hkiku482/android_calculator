@@ -1,7 +1,5 @@
 package com.example.androidcalculator
 
-import android.graphics.Path
-
 class CalculatorController(presenter: CalculatorPresenter) {
     private val presenter: CalculatorPresenter
     private var cFormula: CalculatorFormula = CalculatorFormula()
